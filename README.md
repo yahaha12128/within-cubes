@@ -49,41 +49,21 @@
 
 ## 📸 界面预览
 
-### 🧩 桌面组件
+### 🧩 桌面排版与特色功能
 
-<div align="center" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 16px;">
-  <div style="width: 45%;">
-    <img src="https://github.com/user-attachments/assets/22e8ba93-1bdc-4b4d-b86a-94ad29f5875e" style="width: 100%; height: 240px; object-fit: cover; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
-  </div>
-  <div style="width: 45%;">
-    <img src="https://github.com/user-attachments/assets/4d1788ca-ed8b-443a-9314-c226119824d7" style="width: 100%; height: 240px; object-fit: cover; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
-  </div>
-  <div style="width: 45%;">
-    <img src="https://github.com/user-attachments/assets/b3b631e6-5d97-4062-8201-c5ee14db3cfe" style="width: 100%; height: 240px; object-fit: cover; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
-  </div>
-  <div style="width: 45%;">
-    <img src="https://github.com/user-attachments/assets/a925d95f-327e-43f1-ac92-169bbf352854" style="width: 100%; height: 240px; object-fit: cover; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
-  </div>
-  <div style="width: 45%;">
-    <img src="https://github.com/user-attachments/assets/4dfccf33-5a20-4986-8dda-17bd0b986ce7" style="width: 100%; height: 240px; object-fit: cover; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
-  </div>
-  <div style="width: 45%;">
-    <img src="https://github.com/user-attachments/assets/4b1d6536-3f36-4ca9-818c-6af595a6a2ce" style="width: 100%; height: 240px; object-fit: cover; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
-  </div>
-</div>
+| 沉浸式桌面排版 | 智能番茄钟与专注 |
+| :---: | :---: |
+| <img src="https://github.com/user-attachments/assets/22e8ba93-1bdc-4b4d-b86a-94ad29f5875e" width="400" /> | <img src="https://github.com/user-attachments/assets/4d1788ca-ed8b-443a-9314-c226119824d7" width="400" /> |
 
-<br/>
+| 模块化组件展示 | 一键访客防窥 |
+| :---: | :---: |
+| <img src="https://github.com/user-attachments/assets/b3b631e6-5d97-4062-8201-c5ee14db3cfe" width="400" /> | <img src="https://github.com/user-attachments/assets/a925d95f-327e-43f1-ac92-169bbf352854" width="400" /> |
 
 ### 🖥️ 主界面与控制台
 
-<div align="center" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 16px;">
-  <div style="width: 60%;">
-    <img src="https://github.com/user-attachments/assets/760c70f2-ad98-421d-ba03-89faa44aba64" style="width: 100%; height: 360px; object-fit: cover; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
-  </div>
-  <div style="width: 30%;">
-    <img src="https://github.com/user-attachments/assets/6357f9c7-9e8f-44f3-9dbc-89556f3d98f6" style="width: 100%; height: 360px; object-fit: cover; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
-  </div>
-</div>
+| 仪表盘数据看板 | 设置页 |
+| :---: | :---: |
+| <img src="https://github.com/user-attachments/assets/760c70f2-ad98-421d-ba03-89faa44aba64" width="500" /> | <img src="https://github.com/user-attachments/assets/6357f9c7-9e8f-44f3-9dbc-89556f3d98f6" width="260" /> |
 ---
 
 ## 📥 下载与安装
