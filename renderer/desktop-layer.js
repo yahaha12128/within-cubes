@@ -202,6 +202,7 @@
     "link": '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',
     "monitor": '<rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/>',
     "palette": '<circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>',
+    "pencil": '<path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/>',
     "pin": '<line x1="12" x2="12" y1="17" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/>',
     "scissors": '<circle cx="6" cy="6" r="3"/><path d="M8.12 8.12 12 12"/><path d="M20 4 8.12 15.88"/><circle cx="6" cy="18" r="3"/><path d="M14.8 14.8 20 20"/>',
     "shield": '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>',
@@ -1648,6 +1649,131 @@
     showLayerToast(`已复制 ${result.count || paths.length} 条文件路径`);
   }
 
+  function openRenameFileDialog(categoryKey, file) {
+    if (!file || file.isSystemIcon) return;
+
+    closeTextInputDialog();
+
+    const backdrop = document.createElement("div");
+    backdrop.className = "layer-dialog-backdrop";
+
+    const card = document.createElement("section");
+    card.className = "layer-dialog";
+    card.setAttribute("role", "dialog");
+    card.setAttribute("aria-modal", "true");
+    card.setAttribute("aria-label", "重命名");
+
+    const heading = document.createElement("h2");
+    heading.textContent = "重命名";
+
+    const copy = document.createElement("p");
+    copy.textContent = "输入新的名称后回车保存；扩展名也会一起改动，需要保留请一并输入。";
+
+    const field = document.createElement("label");
+    field.className = "layer-dialog-field";
+    const caption = document.createElement("span");
+    caption.textContent = "名称";
+    const input = document.createElement("input");
+    input.type = "text";
+    input.className = "layer-dialog-single";
+    input.value = file.name;
+    input.maxLength = 240;
+    input.setAttribute("aria-label", "文件名称");
+    field.append(caption, input);
+
+    const actions = document.createElement("div");
+    actions.className = "layer-dialog-actions";
+    const cancel = document.createElement("button");
+    cancel.type = "button";
+    cancel.className = "layer-dialog-btn";
+    cancel.textContent = "取消";
+    const save = document.createElement("button");
+    save.type = "button";
+    save.className = "layer-dialog-btn is-primary";
+    save.textContent = "保存";
+    actions.append(cancel, save);
+
+    card.append(heading, copy, field, actions);
+    backdrop.append(card);
+    document.body.append(backdrop);
+
+    api.setMenuOpen(true);
+    api.focusInput().catch(() => {});
+
+    // 默认只选中主文件名，方便直接改名又不容易误删扩展名。
+    const dotIndex = file.name.lastIndexOf(".");
+    input.focus();
+    if (dotIndex > 0) {
+      input.setSelectionRange(0, dotIndex);
+    } else {
+      input.select();
+    }
+
+    let finished = false;
+
+    const close = () => {
+      if (finished) return;
+      finished = true;
+      backdrop.remove();
+      api.setMenuOpen(false);
+      api.releaseInput();
+    };
+
+    const submit = async () => {
+      if (finished) return;
+
+      const nextName = input.value.trim();
+
+      if (!nextName) {
+        showLayerToast("名称不能为空", { error: true });
+        input.focus();
+        return;
+      }
+
+      if (nextName === file.name) {
+        close();
+        return;
+      }
+
+      close();
+
+      try {
+        const result = await api.renameFile(categoryKey, file.path, nextName);
+
+        if (!result || !result.ok) {
+          showLayerToast(
+            result && result.error ? result.error : "无法重命名文件",
+            { error: true }
+          );
+          return;
+        }
+
+        showLayerToast("已重命名");
+      } catch (error) {
+        showLayerToast("无法重命名文件", { error: true });
+      }
+    };
+
+    cancel.addEventListener("click", close);
+    save.addEventListener("click", submit);
+    backdrop.addEventListener("pointerdown", (event) => {
+      if (event.target === backdrop) close();
+    });
+    input.addEventListener("keydown", (event) => {
+      if (event.isComposing) return;
+
+      if (event.key === "Enter") {
+        event.preventDefault();
+        event.stopPropagation();
+        submit();
+      } else if (event.key === "Escape") {
+        event.preventDefault();
+        event.stopPropagation();
+        close();
+      }
+    });
+  }
+
   function openFileContextMenu({ x, y, categoryKey, file }) {
     if (!file) return;
 
@@ -1713,6 +1839,40 @@
           }
         });
 
+        // 打开方式：走 Windows 自己的「打开方式」选择器，文件夹没有这个动词。
+        if (profile.type !== "folder") {
+          appendContextAction("打开方式", {
+            lucide: "app-window",
+            action: async () => {
+              const result = await api.openWith(categoryKey, file.path);
+
+              if (!result || !result.ok) {
+                showLayerToast(
+                  result && result.error ? result.error : "无法打开「打开方式」",
+                  { error: true }
+                );
+              }
+            }
+          });
+        }
+
+        // 打开所在文件夹：资源管理器里定位并选中该项（文件夹则是选中它本身）。
+        if (!isQuick) {
+          appendContextAction("打开所在文件夹", {
+            lucide: "folder-open",
+            action: async () => {
+              const result = await api.revealFile(categoryKey, file.path);
+
+              if (!result || !result.ok) {
+                showLayerToast(
+                  result && result.error ? result.error : "无法定位文件",
+                  { error: true }
+                );
+              }
+            }
+          });
+        }
+
         if (profile.type === "folder") {
           appendContextAction("在新窗口中打开", {
             lucide: "app-window",
@@ -1760,56 +1920,29 @@
           });
         }
 
-        if (profile.type === "document") {
-          appendContextAction("打开方式", {
-            lucide: "app-window",
-            action: async () => {
-              const result = await api.openWith(categoryKey, file.path);
-
-              if (!result || !result.ok) {
-                showLayerToast(
-                  result && result.error ? result.error : "无法打开「打开方式」",
-                  { error: true }
-                );
-              }
-            }
-          });
-        }
-
         appendContextSeparator();
 
-        if (profile.type === "folder" || profile.type === "document") {
-          appendContextAction("复制", {
-            lucide: "copy",
-            shortcut: "Ctrl+C",
-            action: () => setFileClipboardWithFeedback(menuPaths, "copy")
-          });
-          appendContextAction("剪切", {
-            lucide: "scissors",
-            shortcut: "Ctrl+X",
-            action: () => setFileClipboardWithFeedback(menuPaths, "cut")
-          });
-        }
-
-        if (profile.type === "application") {
-          appendContextAction("打开文件所在的位置", {
-            lucide: "folder-open",
-            action: async () => {
-              const result = await api.revealFile(categoryKey, file.path);
-
-              if (!result || !result.ok) {
-                showLayerToast(
-                  result && result.error ? result.error : "无法定位文件",
-                  { error: true }
-                );
-              }
-            }
-          });
-        }
-
+        appendContextAction("复制", {
+          lucide: "copy",
+          shortcut: "Ctrl+C",
+          action: () => setFileClipboardWithFeedback(menuPaths, "copy")
+        });
+        appendContextAction("剪切", {
+          lucide: "scissors",
+          shortcut: "Ctrl+X",
+          action: () => setFileClipboardWithFeedback(menuPaths, "cut")
+        });
         appendContextAction("复制文件路径", {
           lucide: "link",
           action: () => copyFilePathsWithFeedback(menuPaths)
+        });
+
+        appendContextSeparator();
+        appendContextAction("重命名", {
+          lucide: "pencil",
+          shortcut: "F2",
+          disabled: menuPaths.length > 1,
+          action: () => openRenameFileDialog(categoryKey, file)
         });
 
         appendContextSeparator();

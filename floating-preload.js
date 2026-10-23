@@ -7,6 +7,12 @@ contextBridge.exposeInMainWorld("floatingApi", {
   getSystemIcon: (filePath) => ipcRenderer.invoke("floating:get-icon", filePath),
   openFile: (filePath) => ipcRenderer.invoke("floating:open-file", filePath),
   showContextMenu: (filePath) => ipcRenderer.invoke("floating:context-menu", filePath),
+  renameFile: (filePath, name) => ipcRenderer.invoke("floating:rename-file", { filePath, name }),
+  onBeginRename: (callback) => {
+    const listener = (_event, filePath) => callback(filePath);
+    ipcRenderer.on("floating:begin-rename", listener);
+    return () => ipcRenderer.removeListener("floating:begin-rename", listener);
+  },
   resetGrid: () => ipcRenderer.invoke("floating:reset-grid"),
   rename: (name) => ipcRenderer.invoke("floating:rename", name),
   toggleLock: () => ipcRenderer.invoke("floating:toggle-lock"),

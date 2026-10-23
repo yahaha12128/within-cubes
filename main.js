@@ -6505,6 +6505,84 @@ async function runFileShellAction(action, filePath) {
   }
 }
 
+// Windows 外壳动词直调：ShellExecuteExW + SEE_MASK_INVOKEIDLIST。
+// 这是资源管理器自己用的那条路径，只做一次 API 调用，
+// 既不实例化 Shell.Application COM 对象，也不依赖 PowerShell 进程存活。
+// 注意：必须留在主进程（有消息泵）里同步调用，属性窗口才会被正常绘制。
+let shellExecuteExApi = null;
+
+function getShellExecuteExApi() {
+  if (shellExecuteExApi) return shellExecuteExApi;
+
+  const koffi = require("koffi");
+  const SHELLEXECUTEINFOW = koffi.struct("SHELLEXECUTEINFOW", {
+    cbSize: "uint32",
+    fMask: "uint32",
+    hwnd: "void *",
+    lpVerb: "str16",
+    lpFile: "str16",
+    lpParameters: "str16",
+    lpDirectory: "str16",
+    nShow: "int32",
+    hInstApp: "void *",
+    lpIDList: "void *",
+    lpClass: "str16",
+    hkeyClass: "void *",
+    dwHotKey: "uint32",
+    hIcon: "void *",
+    hProcess: "void *"
+  });
+  const shell32 = koffi.load("shell32.dll");
+
+  shellExecuteExApi = {
+    size: koffi.sizeof(SHELLEXECUTEINFOW),
+    invoke: shell32.func("bool ShellExecuteExW(SHELLEXECUTEINFOW *info)")
+  };
+
+  return shellExecuteExApi;
+}
+
+const SEE_MASK_INVOKEIDLIST = 0x0000000c;
+
+function runShellVerb(verb, filePath) {
+  if (process.platform !== "win32") return false;
+
+  try {
+    const api = getShellExecuteExApi();
+    const info = {
+      cbSize: api.size,
+      fMask: SEE_MASK_INVOKEIDLIST,
+      hwnd: null,
+      lpVerb: verb,
+      lpFile: filePath,
+      lpParameters: null,
+      lpDirectory: null,
+      nShow: 1,
+      hInstApp: null,
+      lpIDList: null,
+      lpClass: null,
+      hkeyClass: null,
+      dwHotKey: 0,
+      hIcon: null,
+      hProcess: null
+    };
+
+    return Boolean(api.invoke(info));
+  } catch (error) {
+    return false;
+  }
+}
+
+async function showNativeFileProperties(filePath) {
+  if (runShellVerb("properties", filePath)) {
+    return { ok: true, via: "shell" };
+  }
+
+  // 极少数文件类型没有注册 properties 动词，退回到 PowerShell 的 Shell.Application。
+  const fallback = await runFileShellAction("properties", filePath);
+  return fallback.ok ? { ok: true, via: "powershell" } : fallback;
+}
+
 async function openFileWithDialog(filePath) {
   return new Promise((resolve) => {
     try {
@@ -9587,7 +9665,7 @@ ipcMain.handle("desktop-layer:show-properties", async (event, payload) => {
     return { ok: false, error: "文件已不在当前组件中。" };
   }
 
-  return runFileShellAction("properties", target.path);
+  return showNativeFileProperties(target.path);
 });
 
 ipcMain.handle("desktop-layer:copy-file-paths", async (event, paths) => {
@@ -11372,7 +11450,7 @@ ipcMain.handle("achievements:record", (event, type, payload) => {
   };
 });
 
-const PROJECT_GITHUB_URL = "https://github.com/yourname/within-cubes";
+const PROJECT_GITHUB_URL = "https://github.com/yahaha12128/within-cubes";
 
 function getGithubRepoSlug() {
   const explicit = String(process.env.WITHIN_CUBES_GITHUB_REPO || "").trim();
@@ -13356,7 +13434,7 @@ ipcMain.handle("floating:open-file", async (event, filePath) => {
   }
 });
 
-ipcMain.handle("floating:context-menu", (event, filePath) => {
+ipcMain.handle("floating:context-menu", async (event, filePath) => {
   const categoryKey = getCategoryKeyForWebContents(event.sender);
   const file = categoryKey ? findFloatingFile(categoryKey, filePath) : null;
 
@@ -13366,22 +13444,85 @@ ipcMain.handle("floating:context-menu", (event, filePath) => {
 
   const win = BrowserWindow.fromWebContents(event.sender);
   const template = [];
+  const target = await resolveDesktopMenuFile(categoryKey, file.path);
+  const realPath = target ? target.path : file.path;
+  let isDirectory = false;
+
+  if (!file.isSystemIcon) {
+    try {
+      isDirectory = (await fs.stat(realPath)).isDirectory();
+    } catch (error) {
+      isDirectory = false;
+    }
+  }
 
   if (file.isSystemIcon) {
-    const target = getSystemIconTarget(file.path);
+    const systemTarget = getSystemIconTarget(file.path);
 
-    if (!target) {
+    if (!systemTarget) {
       return { ok: false, error: "未知的系统入口。" };
     }
 
     template.push({
       label: `打开${file.name}`,
-      click: () => openSystemTarget(target)
+      click: () => openSystemTarget(systemTarget)
     });
   } else {
+    // 分类小组件同样是「真实操作」：每一项都落到系统 API / IPC 实现，
+    // 不用 Shell COM 弹原生菜单，避免 COM 崩溃牵连整个进程。
+    template.push({
+      label: "打开",
+      click: () => {
+        shell.openPath(realPath).catch(() => {});
+      }
+    });
+
+    if (!isDirectory) {
+      template.push({
+        label: "打开方式",
+        click: () => {
+          openFileWithDialog(realPath).catch(() => {});
+        }
+      });
+    }
+
     template.push({
       label: "打开所在文件夹",
-      click: () => shell.showItemInFolder(file.path)
+      click: () => shell.showItemInFolder(realPath)
+    });
+
+    template.push({ type: "separator" });
+
+    template.push({
+      label: "重命名",
+      click: () => {
+        if (win && !win.isDestroyed()) {
+          win.webContents.send("floating:begin-rename", file.path);
+        }
+      }
+    });
+
+    template.push({
+      label: "复制文件路径",
+      click: () => {
+        writeClipboardText(realPath).catch(() => {});
+      }
+    });
+
+    template.push({ type: "separator" });
+
+    template.push({
+      label: "属性",
+      click: () => {
+        showNativeFileProperties(realPath).catch(() => {});
+      }
+    });
+
+    template.push({
+      label: "删除",
+      click: () => {
+        trashDesktopLayerFiles([realPath]).catch(() => {});
+      }
     });
   }
 
@@ -13389,6 +13530,29 @@ ipcMain.handle("floating:context-menu", (event, filePath) => {
 
   menu.popup(win ? { window: win } : {});
   return { ok: true };
+});
+
+ipcMain.handle("floating:rename-file", async (event, payload) => {
+  const categoryKey = getCategoryKeyForWebContents(event.sender);
+
+  if (!categoryKey) {
+    return { ok: false, error: "分类尚未初始化。" };
+  }
+
+  const filePath = payload && payload.filePath;
+  const name = payload && payload.name;
+
+  if (typeof filePath !== "string" || typeof name !== "string") {
+    return { ok: false, error: "重命名参数无效。" };
+  }
+
+  const result = await renameDesktopLayerFile(categoryKey, filePath, name);
+
+  if (result && result.ok) {
+    sendFloatingUpdate(categoryKey);
+  }
+
+  return result;
 });
 
 ipcMain.handle("floating:rename", async (event, name) => {

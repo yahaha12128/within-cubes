@@ -451,6 +451,21 @@ select {
   white-space: nowrap;
 }
 
+.file-rename-input {
+  width: calc(100% - 6px);
+  height: 20px;
+  padding: 0 5px;
+  border: 1px solid rgba(143, 200, 165, 0.9);
+  border-radius: 6px;
+  outline: none;
+  color: var(--text-soft);
+  background: rgba(255, 255, 255, 0.14);
+  font: inherit;
+  font-size: 10px;
+  text-align: center;
+  user-select: text;
+}
+
 .floating-empty {
   display: flex;
   flex: 0 0 auto;

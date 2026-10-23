@@ -361,6 +361,7 @@
     cell.setAttribute("role", "listitem");
     cell.setAttribute("aria-label", `${file.name}，点击打开`);
     cell.title = file.isSystemIcon ? `${file.name}（系统图标）` : file.name;
+    cell.dataset.filePath = file.path;
 
     const iconWrap = document.createElement("div");
     iconWrap.className = "file-icon";
@@ -420,6 +421,86 @@
     cell.addEventListener("dragend", handleDragEnd);
 
     return cell;
+  }
+
+  // 右键菜单「重命名」→ 主进程发事件过来，这里在格子上就地出输入框。
+  function beginInlineFileRename(filePath) {
+    if (!filePath) return;
+
+    const cell = Array.from(els.grid.children).find(
+      (node) => node.dataset.filePath === filePath
+    );
+
+    if (!cell || cell.querySelector(".file-rename-input")) return;
+
+    const file = files.find((item) => item.path === filePath);
+    const nameNode = cell.querySelector(".file-name");
+
+    if (!file || !nameNode || file.isSystemIcon) return;
+
+    const input = document.createElement("input");
+    input.type = "text";
+    input.className = "file-rename-input";
+    input.value = file.name;
+    input.maxLength = 240;
+    input.setAttribute("aria-label", "重命名文件");
+
+    const wasDraggable = cell.draggable;
+    cell.draggable = false;
+    nameNode.hidden = true;
+    cell.append(input);
+    input.focus();
+
+    const dotIndex = file.name.lastIndexOf(".");
+    if (dotIndex > 0) {
+      input.setSelectionRange(0, dotIndex);
+    } else {
+      input.select();
+    }
+
+    let finished = false;
+
+    const finish = async (commit) => {
+      if (finished) return;
+      finished = true;
+
+      const value = input.value.trim();
+      input.remove();
+      nameNode.hidden = false;
+      cell.draggable = wasDraggable;
+
+      if (!commit || !value || value === file.name) return;
+
+      try {
+        const result = await api.renameFile(file.path, value);
+
+        if (!result || !result.ok) {
+          showToast(result && result.error ? result.error : "无法重命名文件");
+          return;
+        }
+
+        if (result.state) applyState(result.state);
+      } catch (error) {
+        showToast("无法重命名文件");
+      }
+    };
+
+    input.addEventListener("keydown", (event) => {
+      event.stopPropagation();
+      if (event.isComposing) return;
+
+      if (event.key === "Enter") {
+        event.preventDefault();
+        finish(true);
+      } else if (event.key === "Escape") {
+        event.preventDefault();
+        finish(false);
+      }
+    });
+    input.addEventListener("blur", () => finish(true));
+    input.addEventListener("pointerdown", (event) => event.stopPropagation());
+    input.addEventListener("click", (event) => event.stopPropagation());
+    input.addEventListener("dblclick", (event) => event.stopPropagation());
   }
 
   async function loadSystemIcon(file, iconWrap) {
@@ -818,6 +899,12 @@
   api.onUpdate((state) => {
     applyState(state);
   });
+
+  if (typeof api.onBeginRename === "function") {
+    api.onBeginRename((filePath) => {
+      beginInlineFileRename(filePath);
+    });
+  }
 
   if (typeof api.onToast === "function") {
     api.onToast((message) => {

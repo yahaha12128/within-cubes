@@ -4486,7 +4486,7 @@
         chrome: "—",
         node: "—",
         platform: "Windows",
-        githubUrl: "https://github.com/yourname/within-cubes"
+        githubUrl: "https://github.com/yahaha12128/within-cubes"
       };
     } else {
       try {
@@ -4499,7 +4499,7 @@
               chrome: "—",
               node: "—",
               platform: "Windows",
-              githubUrl: "https://github.com/yourname/within-cubes"
+              githubUrl: "https://github.com/yahaha12128/within-cubes"
             };
       } catch (error) {
         aboutInfo = {
@@ -4508,7 +4508,7 @@
           chrome: "—",
           node: "—",
           platform: "Windows",
-          githubUrl: "https://github.com/yourname/within-cubes"
+          githubUrl: "https://github.com/yahaha12128/within-cubes"
         };
       }
     }

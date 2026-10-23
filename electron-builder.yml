@@ -57,6 +57,11 @@ win:
   icon: build/icon.ico
   artifactName: WithinCubes-Setup-${version}-${arch}.${ext}
 
+publish:
+  provider: github
+  owner: yahaha12128
+  repo: within-cubes
+
 nsis:
   oneClick: false
   perMachine: false
