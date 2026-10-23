@@ -55,13 +55,13 @@
 | :---: | :---: |
 | <img src="https://github.com/user-attachments/assets/22e8ba93-1bdc-4b4d-b86a-94ad29f5875e" width="400" /> | <img src="https://github.com/user-attachments/assets/4d1788ca-ed8b-443a-9314-c226119824d7" width="400" /> |
 
-| 模块化组件展示 | 一键访客防窥 |
+| 组件展示 | 一键防窥 |
 | :---: | :---: |
 | <img src="https://github.com/user-attachments/assets/b3b631e6-5d97-4062-8201-c5ee14db3cfe" width="400" /> | <img src="https://github.com/user-attachments/assets/a925d95f-327e-43f1-ac92-169bbf352854" width="400" /> |
 
 ### 🖥️ 主界面与控制台
 
-| 仪表盘数据看板 | 设置页 |
+| 数据看板 | 桌面效果 |
 | :---: | :---: |
 | <img src="https://github.com/user-attachments/assets/760c70f2-ad98-421d-ba03-89faa44aba64" width="500" /> | <img src="https://github.com/user-attachments/assets/6357f9c7-9e8f-44f3-9dbc-89556f3d98f6" width="260" /> |
 ---
