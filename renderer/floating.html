@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:;"
+  >
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>整理分类</title>
+  <link rel="stylesheet" href="floating.css">
+</head>
+<body>
+  <div class="floating-app" id="floatingApp">
+    <div class="glass-layer" id="glassLayer" aria-hidden="true"></div>
+
+    <header class="floating-dragbar" id="dragbar" title="拖动这里移动小组件">
+      <div class="drag-title">
+        <span class="drag-grip" aria-hidden="true">⋮⋮</span>
+        <span class="drag-label" id="categoryLabel" title="双击重命名">整理分类</span>
+        <span class="lock-badge" id="lockBadge" hidden>已锁定</span>
+      </div>
+      <div class="window-actions">
+        <button class="icon-btn" id="lockButton" type="button" aria-label="锁定小组件" title="锁定小组件">🔓</button>
+        <button class="icon-btn" id="resetButton" type="button" aria-label="恢复默认大小" title="恢复默认大小">⟲</button>
+        <button class="icon-btn" id="closeButton" type="button" aria-label="关闭小组件" title="关闭小组件">×</button>
+      </div>
+    </header>
+
+    <div class="floating-scroll" id="gridScroll">
+      <div class="floating-grid" id="grid" role="list"></div>
+    </div>
+
+    <div class="floating-empty" id="emptyState" hidden>暂无文件</div>
+    <div class="floating-drop-overlay" id="dropOverlay" hidden aria-hidden="true">
+      <span class="floating-drop-caption">松开移入</span>
+      <strong class="floating-drop-name" id="dropOverlayName">此分类</strong>
+    </div>
+    <div class="floating-toast" id="toast" hidden role="status" aria-live="polite"></div>
+  </div>
+
+  <script src="floating.js"></script>
+</body>
+</html>

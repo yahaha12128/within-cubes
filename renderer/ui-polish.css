@@ -1,0 +1,142 @@
+/* Component library card layout and note reader refinements. */
+
+.page .ui-card.personalize-card {
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 20px 18px !important;
+}
+
+.page .ui-card.personalize-card .personalize-card-icon {
+  position: static !important;
+  top: auto !important;
+  left: auto !important;
+  z-index: 0;
+  width: 56px !important;
+  height: 56px !important;
+  flex: 0 0 56px !important;
+  align-self: center;
+  margin: 0 auto;
+  border-radius: 16px !important;
+}
+
+.page .ui-card.personalize-card .personalize-card-icon .icon {
+  width: 27px !important;
+  height: 27px !important;
+}
+
+.page .ui-card.personalize-card .personalize-card-copy {
+  flex: 0 1 auto !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  margin: 14px auto 0 !important;
+  padding: 0 2px !important;
+  text-align: center !important;
+}
+
+.page .ui-card.personalize-card .personalize-card-copy h3 {
+  width: 100%;
+  text-align: center !important;
+}
+
+.page .ui-card.personalize-card .personalize-card-copy p {
+  margin-top: 7px !important;
+  text-align: center !important;
+}
+
+.page .ui-card.personalize-card .personalize-card-toggle {
+  top: 18px !important;
+  right: 18px !important;
+}
+
+/* Note reading modal */
+
+.note-reader-panel {
+  width: min(720px, 100%) !important;
+}
+
+.note-reader-heading {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 12px;
+}
+
+.note-reader-heading .settings-icon {
+  flex: 0 0 38px !important;
+  width: 38px !important;
+  height: 38px !important;
+}
+
+.note-reader-heading > div {
+  min-width: 0;
+}
+
+.note-reader-heading h2 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.note-reader-body {
+  min-height: 220px;
+  flex: 1 1 auto;
+  padding: 0 26px;
+  overflow-y: auto;
+  border-top: 1px solid var(--ui-line);
+  border-bottom: 1px solid var(--ui-line);
+}
+
+.note-reader-content {
+  margin: 0;
+  padding: 22px 2px 28px;
+  color: var(--ui-ink);
+  background: transparent;
+  font-family: var(--ui-font);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+  tab-size: 2;
+  user-select: text;
+  white-space: pre-wrap;
+}
+
+.note-reader-actions {
+  justify-content: space-between !important;
+  gap: 12px;
+}
+
+.note-reader-action-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.note-reader-copy {
+  min-width: 112px;
+}
+
+@media (max-width: 560px) {
+  .page .ui-card.personalize-card {
+    aspect-ratio: auto !important;
+    min-height: 216px !important;
+  }
+
+  .note-reader-body {
+    padding: 0 18px;
+  }
+
+  .note-reader-content {
+    font-size: 16px;
+    line-height: 1.75;
+  }
+
+  .note-reader-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .note-reader-action-group {
+    justify-content: flex-end;
+  }
+}

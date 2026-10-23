@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: file:; media-src 'none';"
+  >
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>桌面渲染层</title>
+  <link rel="stylesheet" href="floating.css">
+  <link rel="stylesheet" href="widget.css">
+  <link rel="stylesheet" href="desktop-layer.css">
+  <link rel="stylesheet" href="desktop-layer-extra.css">
+  <link rel="stylesheet" href="desktop-menu.css">
+  <link rel="stylesheet" href="desktop-tour.css">
+  <link rel="stylesheet" href="desktop-calendar.css">
+  <link rel="stylesheet" href="music-card.css">
+  <link rel="stylesheet" href="achievement-toast.css">
+</head>
+<body>
+  <main class="desktop-stage" id="desktopStage" aria-label="桌面组件">
+    <div class="focus-shade" id="focusShade" aria-hidden="true"></div>
+    <div class="desktop-icon-layer" id="desktopIconLayer" role="list" aria-label="未整理桌面文件"></div>
+    <div class="desktop-widget-layer" id="widgetLayer"></div>
+    <div class="alignment-guides" id="alignmentGuides" aria-hidden="true" hidden>
+      <span class="alignment-guide alignment-guide--vertical" data-guide="vertical"></span>
+      <span class="alignment-guide alignment-guide--horizontal" data-guide="horizontal"></span>
+    </div>
+    <div class="layer-toast" id="layerToast" role="status" aria-live="polite" hidden></div>
+  </main>
+
+  <aside
+    class="achievement-toast"
+    id="achievementToast"
+    role="status"
+    aria-live="polite"
+    aria-atomic="true"
+    tabindex="0"
+    hidden
+  >
+    <div class="achievement-toast-inner">
+      <div class="achievement-toast-icon" id="achievementToastIcon" aria-hidden="true"></div>
+      <div class="achievement-toast-copy">
+        <span class="achievement-toast-kicker">🏆 成就达成</span>
+        <strong class="achievement-toast-name" id="achievementToastName"></strong>
+        <span class="achievement-toast-description" id="achievementToastDescription"></span>
+      </div>
+    </div>
+    <div class="achievement-toast-progress" aria-hidden="true">
+      <span></span>
+    </div>
+  </aside>
+
+  <div class="desktop-tour" id="desktopTour" hidden>
+    <div class="tour-mask" data-tour-mask="top" aria-hidden="true"></div>
+    <div class="tour-mask" data-tour-mask="right" aria-hidden="true"></div>
+    <div class="tour-mask" data-tour-mask="bottom" aria-hidden="true"></div>
+    <div class="tour-mask" data-tour-mask="left" aria-hidden="true"></div>
+
+    <div class="tour-spotlight" id="tourSpotlight" aria-hidden="true" hidden></div>
+
+    <div class="tour-demo-target" id="tourDemoTarget" hidden aria-hidden="true"></div>
+
+    <section
+      class="tour-card"
+      id="tourCard"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="tourTitle"
+      aria-describedby="tourCopy"
+      tabindex="-1"
+    >
+      <header class="tour-card-head">
+        <span class="tour-kicker">
+          <span class="tour-kicker-mark" aria-hidden="true"></span>
+          方寸格 · 新手引导
+        </span>
+        <span class="tour-counter" id="tourCounter">01 / 08</span>
+      </header>
+      <div class="tour-progress" id="tourProgress" aria-hidden="true"></div>
+      <h2 class="tour-title" id="tourTitle"></h2>
+      <p class="tour-copy" id="tourCopy"></p>
+      <footer class="tour-actions">
+        <button class="tour-btn tour-btn--ghost" id="tourSkipButton" type="button">跳过引导</button>
+        <div class="tour-action-main">
+          <button class="tour-btn tour-btn--ghost" id="tourPrevButton" type="button" hidden>上一步</button>
+          <button class="tour-btn tour-btn--primary" id="tourNextButton" type="button">开始体验（下一步）</button>
+        </div>
+      </footer>
+    </section>
+  </div>
+
+  <div class="desktop-context-menu" id="desktopContextMenu" role="menu" hidden>
+    <header class="context-menu-head" id="contextMenuHead">
+      <span class="context-menu-head-icon" id="contextMenuHeadIcon" aria-hidden="true"></span>
+      <span class="context-menu-head-copy">
+        <span class="context-menu-title" id="contextMenuTitle"></span>
+        <span class="context-menu-subtitle" id="contextMenuSubtitle"></span>
+      </span>
+    </header>
+    <div class="context-menu-scroll" id="contextMenuBody"></div>
+  </div>
+
+  <template id="categoryTemplate">
+    <section class="desktop-widget category-widget" data-widget-kind="category" role="group">
+      <div class="floating-app">
+        <div class="glass-layer" aria-hidden="true"></div>
+
+        <header class="floating-dragbar" data-category-dragbar title="拖动这里移动小组件">
+          <div class="drag-title">
+            <span class="drag-grip" aria-hidden="true">⋮⋮</span>
+            <span class="drag-label" data-category-label title="双击重命名">整理分类</span>
+            <span class="lock-badge" data-lock-badge hidden>已锁定</span>
+          </div>
+          <div class="window-actions">
+            <button class="icon-btn" data-action="lock" type="button" aria-label="锁定小组件" title="锁定小组件">🔓</button>
+            <button class="icon-btn" data-action="reset" type="button" aria-label="恢复默认大小" title="恢复默认大小">⟲</button>
+            <button class="icon-btn" data-action="close" type="button" aria-label="关闭小组件" title="关闭小组件">×</button>
+          </div>
+        </header>
+
+        <div class="floating-scroll" data-scroll>
+          <div class="floating-grid" data-grid role="list"></div>
+        </div>
+
+        <div class="floating-empty" data-empty hidden>暂无文件</div>
+        <div class="category-drop-hint" data-drop-hint hidden aria-hidden="true">松开移入</div>
+        <div class="floating-toast" data-toast hidden role="status" aria-live="polite"></div>
+      </div>
+      <div class="widget-resize-handle" data-resize-handle title="拖动调整大小"></div>
+    </section>
+  </template>
+
+  <template id="tabGroupTemplate">
+    <section class="desktop-widget tab-group-widget" data-widget-kind="group" role="group">
+      <div class="floating-app">
+        <div class="glass-layer" aria-hidden="true"></div>
+
+        <header class="floating-dragbar group-dragbar" data-group-dragbar title="拖动这里移动标签组">
+          <div class="drag-title">
+            <span class="drag-grip" aria-hidden="true">⋮⋮</span>
+            <span class="drag-label" data-group-label>标签组</span>
+            <span class="lock-badge" data-group-count>2 个标签</span>
+          </div>
+          <button class="group-split" data-group-split type="button" title="拆分标签组">拆分</button>
+        </header>
+
+        <div class="group-tabs" data-group-tabs role="tablist" aria-label="标签组中的分类"></div>
+        <div class="group-panels" data-group-panels></div>
+        <div class="floating-toast group-toast" data-group-toast hidden role="status" aria-live="polite"></div>
+      </div>
+      <div class="widget-resize-handle" data-resize-handle title="拖动调整大小"></div>
+    </section>
+  </template>
+
+  <template id="clockTemplate">
+    <section class="desktop-widget widget-widget" data-widget-kind="widget" data-widget-key="clock">
+      <div class="floating-app widget-app">
+        <div class="widget-bg" data-widget-bg hidden>
+          <img data-widget-bg-image alt="">
+        </div>
+        <div class="glass-layer" aria-hidden="true"></div>
+        <main class="widget-body">
+          <section class="clock-panel" aria-label="时钟">
+            <div class="clock-content" data-clock-content>
+              <p class="clock-time" data-clock-time>--:--:--</p>
+              <p class="clock-date" data-clock-date>----/--/--</p>
+              <p class="clock-weekday" data-clock-weekday>星期—</p>
+              <p class="clock-text" data-clock-text>祝你开心！</p>
+            </div>
+          </section>
+        </main>
+      </div>
+      <div class="widget-resize-handle" data-resize-handle title="拖动调整大小"></div>
+    </section>
+  </template>
+
+  <template id="musicTemplate">
+    <section class="desktop-widget widget-widget" data-widget-kind="widget" data-widget-key="music">
+      <div class="floating-app widget-app">
+        <div class="widget-bg" data-widget-bg hidden>
+          <img data-widget-bg-image alt="">
+        </div>
+        <div class="glass-layer" aria-hidden="true"></div>
+        <div class="music-card-cover" data-music-card-cover hidden aria-hidden="true">
+          <div class="music-card-cover-veil"></div>
+        </div>
+        <main class="widget-body">
+          <section class="music-panel" aria-label="音乐播放器">
+            <div class="music-head">
+              <div class="music-disc" data-music-disc aria-hidden="true">♪</div>
+              <div class="music-copy">
+                <h2 data-music-title>—</h2>
+                <p data-music-artist aria-live="polite">—</p>
+              </div>
+            </div>
+
+            <div class="music-seek" data-music-seek role="progressbar" aria-label="播放进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+              <div class="music-seek-fill" data-music-seek-fill></div>
+            </div>
+
+            <div class="music-times">
+              <span data-music-current>0:00</span>
+              <span data-music-duration>0:00</span>
+            </div>
+
+            <div class="music-controls">
+              <button class="music-control" data-music-prev type="button" aria-label="上一首" title="上一首">⏮</button>
+              <button class="music-control music-control--play" data-music-play type="button" aria-label="播放" title="播放">▶</button>
+              <button class="music-control" data-music-next type="button" aria-label="下一首" title="下一首">⏭</button>
+            </div>
+          </section>
+        </main>
+      </div>
+      <div class="widget-resize-handle" data-resize-handle title="拖动调整大小"></div>
+    </section>
+  </template>
+
+  <template id="notesTemplate">
+    <section class="desktop-widget widget-widget note-widget" data-widget-kind="widget" data-widget-key="notes">
+      <div class="floating-app widget-app">
+        <div class="widget-bg" data-widget-bg hidden>
+          <img data-widget-bg-image alt="">
+        </div>
+        <div class="glass-layer" aria-hidden="true"></div>
+        <main class="widget-body">
+          <section class="panel-card note-panel" aria-label="随手记">
+            <header class="panel-head note-head">
+              <div class="panel-title">
+                <span class="panel-glyph" aria-hidden="true">✎</span>
+                <div>
+                  <h2>随手记</h2>
+                  <p data-notes-page-caption>写好后保存到本机</p>
+                </div>
+              </div>
+              <div class="notes-head-actions">
+                <span class="panel-badge" data-notes-status>准备就绪</span>
+                <div class="notes-pager" role="group" aria-label="随手记翻页">
+                  <button class="notes-page-btn" data-notes-prev type="button" aria-label="上一页" title="上一页">‹</button>
+                  <span class="notes-page-label" data-notes-page-label>1 / 2</span>
+                  <button class="notes-page-btn" data-notes-next type="button" aria-label="下一页" title="下一页">›</button>
+                </div>
+              </div>
+            </header>
+
+            <div class="notes-page" data-notes-editor-page>
+              <textarea
+                class="notes-input"
+                data-notes-input
+                maxlength="50000"
+                placeholder="随手写下一点什么…"
+                aria-label="随手记内容"
+                spellcheck="false"
+              ></textarea>
+              <div class="notes-editor-foot">
+                <span class="notes-draft-note" data-notes-meta>草稿会自动保留</span>
+                <button class="notes-save-btn" data-notes-save type="button">保存</button>
+              </div>
+            </div>
+
+            <div class="notes-page notes-history-page" data-notes-history-page hidden>
+              <div class="notes-history-head">
+                <span>最近保存的 5 条</span>
+                <span class="notes-history-count" data-notes-history-count></span>
+              </div>
+              <div class="notes-history-list" data-notes-history></div>
+              <p class="notes-history-empty" data-notes-history-empty>还没有保存过随手记。</p>
+              <button class="notes-more-btn" data-notes-more type="button">
+                更多记录
+                <span aria-hidden="true">›</span>
+              </button>
+            </div>
+          </section>
+        </main>
+        <div class="category-drop-hint transfer-drop-hint" data-transfer-drop-hint hidden aria-hidden="true">松开生成图文卡片</div>
+      </div>
+      <div class="widget-resize-handle" data-resize-handle title="拖动调整大小"></div>
+    </section>
+  </template>
+
+  <template id="clipboardTemplate">
+    <section class="desktop-widget widget-widget clipboard-widget" data-widget-kind="widget" data-widget-key="clipboard">
+      <div class="floating-app widget-app">
+        <div class="widget-bg" data-widget-bg hidden>
+          <img data-widget-bg-image alt="">
+        </div>
+        <div class="glass-layer" aria-hidden="true"></div>
+        <main class="widget-body">
+          <section class="panel-card clipboard-panel" aria-label="剪贴板历史">
+            <header class="panel-head">
+              <div class="panel-title">
+                <span class="panel-glyph" aria-hidden="true">📋</span>
+                <div>
+                  <h2>剪贴板历史</h2>
+                  <p>自动记录最近复制的文字</p>
+                </div>
+              </div>
+              <span class="panel-badge" data-clipboard-count>0 / 10</span>
+            </header>
+
+            <div class="clipboard-list" data-clipboard-list role="list"></div>
+            <p class="clipboard-empty" data-clipboard-empty>
+              还没有记录。复制文字后会自动出现在这里。
+            </p>
+            <p class="clipboard-hint">点击记录重新复制 · 右键删除</p>
+          </section>
+        </main>
+      </div>
+      <div class="widget-resize-handle" data-resize-handle title="拖动四边或四角调整大小"></div>
+    </section>
+  </template>
+
+  <template id="quickTemplate">
+    <section class="desktop-widget widget-widget quick-widget" data-widget-kind="widget" data-widget-key="quick">
+      <div class="floating-app widget-app">
+        <div class="widget-bg" data-widget-bg hidden>
+          <img data-widget-bg-image alt="">
+        </div>
+        <div class="glass-layer" aria-hidden="true"></div>
+        <main class="widget-body quick-body">
+          <section class="panel-card quick-panel" aria-label="快速收纳">
+            <header class="panel-head quick-head">
+              <div class="panel-title">
+                <span class="panel-glyph" aria-hidden="true">⇥</span>
+                <div>
+                  <h2>快速收纳</h2>
+                  <p data-quick-count>0 个中转文件</p>
+                </div>
+              </div>
+              <span class="panel-badge">临时中转</span>
+            </header>
+            <div class="quick-scroll" data-quick-scroll>
+              <div class="quick-grid" data-quick-grid role="list"></div>
+              <p class="quick-empty" data-quick-empty>
+                把文件拖到这里临时中转；文件仍保留在原来的位置。
+              </p>
+            </div>
+            <div class="quick-drop-hint" data-quick-drop-hint hidden aria-hidden="true">松开加入快速收纳</div>
+          </section>
+        </main>
+      </div>
+      <div class="widget-resize-handle" data-resize-handle title="拖动调整大小"></div>
+    </section>
+  </template>
+
+  <template id="todoTemplate">
+    <section class="desktop-widget widget-widget todo-widget" data-widget-kind="widget" data-widget-key="todo">
+      <div class="floating-app widget-app">
+        <div class="widget-bg" data-widget-bg hidden>
+          <img data-widget-bg-image alt="">
+        </div>
+        <div class="glass-layer" aria-hidden="true"></div>
+        <main class="widget-body">
+          <section class="panel-card todo-panel" aria-label="任务待办">
+            <header class="panel-head">
+              <div class="panel-title">
+                <span class="panel-glyph" aria-hidden="true">✓</span>
+                <div>
+                  <h2>任务待办</h2>
+                  <p data-todo-count>0 项待办</p>
+                </div>
+              </div>
+              <div class="notes-pager todo-pager" role="group" aria-label="待办翻页">
+                <button class="notes-page-btn" data-todo-prev type="button" aria-label="上一页" title="上一页">‹</button>
+                <span class="notes-page-label" data-todo-page-label>1 / 2</span>
+                <button class="notes-page-btn" data-todo-next type="button" aria-label="下一页" title="下一页">›</button>
+              </div>
+            </header>
+
+            <!-- 第一页：添加区（大输入框 + 底部统一操作条） -->
+            <div class="todo-page todo-add-page" data-todo-add-page>
+              <form class="todo-form todo-add-stack" data-todo-form>
+                <textarea
+                  class="todo-input"
+                  data-todo-input
+                  rows="3"
+                  maxlength="200"
+                  autocomplete="off"
+                  spellcheck="false"
+                  placeholder="添加任务，按回车确认"
+                  aria-label="新待办内容"
+                ></textarea>
+                <div class="todo-bottom-bar">
+                  <label class="todo-field todo-field-date">
+                    <span class="todo-field-label">日期</span>
+                    <input class="todo-date" data-todo-date type="date" aria-label="待办日期">
+                  </label>
+                  <label class="todo-field todo-field-time">
+                    <span class="todo-field-label">时间</span>
+                    <input class="todo-time" data-todo-time type="time" aria-label="待办时间（可选）">
+                  </label>
+                  <button class="todo-add" data-todo-add type="submit">+ 添加</button>
+                </div>
+              </form>
+            </div>
+
+            <!-- 第二页：未完成区（只有列表 + 居中「查看全部」） -->
+            <div class="todo-page todo-list-page" data-todo-list-page hidden>
+              <div class="todo-list" data-todo-list role="list"></div>
+              <p class="todo-empty" data-todo-empty>还没有待办，先写下一件小事吧。</p>
+              <div class="todo-list-footer">
+                <button class="todo-view-all" data-todo-open-manager type="button">
+                  查看全部 <span aria-hidden="true">›</span>
+                </button>
+              </div>
+            </div>
+
+            <span class="panel-badge todo-progress-badge" data-todo-progress hidden>0 / 0</span>
+          </section>
+        </main>
+        <div class="category-drop-hint transfer-drop-hint" data-transfer-drop-hint hidden aria-hidden="true">松开生成待办任务</div>
+      </div>
+      <div class="widget-resize-handle" data-resize-handle title="拖动调整大小"></div>
+    </section>
+  </template>
+
+  <template id="calendarTemplate">
+    <section class="desktop-widget widget-widget calendar-widget" data-widget-kind="widget" data-widget-key="calendar">
+      <div class="floating-app widget-app">
+        <div class="widget-bg" data-widget-bg hidden>
+          <img data-widget-bg-image alt="">
+        </div>
+        <div class="glass-layer" aria-hidden="true"></div>
+        <main class="widget-body">
+          <section class="panel-card calendar-panel" data-calendar-panel aria-label="日历">
+            <div class="calendar-flipper" data-calendar-flipper>
+              <div class="calendar-face calendar-front" data-calendar-front>
+                <header class="panel-head calendar-head">
+                  <div class="panel-title">
+                    <span class="panel-glyph" aria-hidden="true">▦</span>
+                    <div>
+                      <h2 data-calendar-month>————</h2>
+                      <p>有未完成待办的日期会显示橙点</p>
+                    </div>
+                  </div>
+                  <span class="panel-badge" data-calendar-today>今天</span>
+                </header>
+                <div class="calendar-weekdays" aria-hidden="true">
+                  <span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span>
+                </div>
+                <div class="calendar-grid" data-calendar-grid role="grid" aria-label="当月日历"></div>
+                <p class="calendar-tip">点击日期翻面查看当天待办</p>
+              </div>
+
+              <div class="calendar-face calendar-back" data-calendar-back aria-hidden="true">
+                <header class="calendar-back-head">
+                  <button
+                    class="calendar-back-btn"
+                    data-calendar-return
+                    type="button"
+                  >← 返回月历</button>
+                  <span class="calendar-selected-date" data-calendar-selected-date>今天</span>
+                </header>
+                <div class="calendar-back-title">
+                  <span>当天待办</span>
+                  <span class="calendar-back-count" data-calendar-back-count>0</span>
+                </div>
+                <div
+                  class="calendar-back-todos"
+                  data-calendar-back-todos
+                  role="list"
+                  aria-label="所选日期的待办"
+                ></div>
+                <p class="calendar-back-empty" data-calendar-back-empty hidden>
+                  这一天还没有待办。从「任务待办」拖一个任务到这里。
+                </p>
+                <p class="calendar-back-hint">
+                  勾选即可完成 · 把待办拖到日期上即可安排
+                </p>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+      <div class="widget-resize-handle" data-resize-handle title="拖动调整大小"></div>
+    </section>
+  </template>
+
+  <template id="pomodoroTemplate">
+    <section class="desktop-widget widget-widget pomodoro-widget" data-widget-kind="widget" data-widget-key="pomodoro">
+      <div class="floating-app widget-app">
+        <div class="widget-bg" data-widget-bg hidden>
+          <img data-widget-bg-image alt="">
+        </div>
+        <div class="glass-layer" aria-hidden="true"></div>
+        <main class="widget-body">
+          <section class="panel-card pomodoro-panel" aria-label="番茄钟">
+            <header class="panel-head">
+              <div class="panel-title">
+                <span class="panel-glyph" aria-hidden="true">◷</span>
+                <div>
+                  <h2>番茄钟</h2>
+                  <p data-pomodoro-phase>专注时间</p>
+                </div>
+              </div>
+              <span class="panel-badge" data-pomodoro-status>准备专注</span>
+            </header>
+
+            <div class="pomodoro-target" data-pomodoro-target hidden>
+              <span class="pomodoro-target-kicker">目标</span>
+              <span class="pomodoro-target-name" data-pomodoro-target-name></span>
+              <span class="pomodoro-target-meta" data-pomodoro-target-meta></span>
+              <button
+                class="pomodoro-target-clear"
+                data-pomodoro-clear-target
+                type="button"
+                aria-label="清除专注目标"
+                title="清除专注目标"
+              >×</button>
+            </div>
+
+            <div class="pomodoro-dial">
+              <svg class="pomodoro-ring" viewBox="0 0 120 120" aria-hidden="true">
+                <defs>
+                  <linearGradient id="pomodoroFocusGradient" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#ef5b66"></stop>
+                    <stop offset="100%" stop-color="#4f8fe8"></stop>
+                  </linearGradient>
+                  <linearGradient id="pomodoroBreakGradient" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#5fcf92"></stop>
+                    <stop offset="100%" stop-color="#e9a34a"></stop>
+                  </linearGradient>
+                </defs>
+                <circle class="pomodoro-ring-track" cx="60" cy="60" r="52"></circle>
+                <circle
+                  class="pomodoro-ring-progress"
+                  data-pomodoro-progress
+                  cx="60"
+                  cy="60"
+                  r="52"
+                  pathLength="100"
+                ></circle>
+              </svg>
+              <div class="pomodoro-timer" data-pomodoro-time role="timer" aria-live="off">25:00</div>
+            </div>
+
+            <div class="pomodoro-controls">
+              <button class="pomodoro-secondary" data-pomodoro-reset type="button">重置</button>
+              <button class="pomodoro-primary" data-pomodoro-toggle type="button">开始</button>
+            </div>
+
+            <p class="pomodoro-hint" data-pomodoro-hint>专注 25 分钟 · 休息 5 分钟</p>
+          </section>
+        </main>
+        <div class="category-drop-hint pomodoro-drop-hint" data-pomodoro-drop-hint hidden aria-hidden="true">松开设定专注目标</div>
+      </div>
+      <div class="widget-resize-handle" data-resize-handle title="拖动调整大小"></div>
+    </section>
+  </template>
+
+  <template id="searchTemplate">
+    <section class="desktop-widget widget-widget search-widget" data-widget-kind="widget" data-widget-key="search">
+      <div class="floating-app widget-app">
+        <div class="widget-bg" data-widget-bg hidden>
+          <img data-widget-bg-image alt="">
+        </div>
+        <div class="glass-layer" aria-hidden="true"></div>
+        <main class="widget-body search-body">
+          <section class="panel-card search-panel" aria-label="快速搜索">
+            <header class="panel-head">
+              <div class="panel-title">
+                <span class="panel-glyph" aria-hidden="true">⌕</span>
+                <div>
+                  <h2>快速搜索</h2>
+                  <p data-search-status>搜索桌面与分类文件</p>
+                </div>
+              </div>
+              <span class="panel-badge" data-search-count>0 个结果</span>
+            </header>
+
+            <form class="search-form" data-search-form>
+              <input
+                class="search-input"
+                data-search-input
+                type="search"
+                maxlength="200"
+                autocomplete="off"
+                placeholder="输入文件名，或把文件拖进来"
+                aria-label="搜索文件"
+              >
+              <button class="search-submit" type="submit">搜索</button>
+            </form>
+
+            <div class="search-results" data-search-results role="list"></div>
+            <p class="search-empty" data-search-empty>
+              输入名称搜索桌面、分类和快速收纳中的文件；拖入文件会自动填入文件名。
+            </p>
+          </section>
+        </main>
+        <div class="category-drop-hint transfer-drop-hint" data-transfer-drop-hint hidden aria-hidden="true">松开填入文件名</div>
+      </div>
+      <div class="widget-resize-handle" data-resize-handle title="拖动调整大小"></div>
+    </section>
+  </template>
+
+  <script src="i18n-data.js"></script>
+  <script src="i18n-data-desktop.js"></script>
+  <script src="i18n.js"></script>
+  <script src="desktop-layer.js"></script>
+</body>
+</html>

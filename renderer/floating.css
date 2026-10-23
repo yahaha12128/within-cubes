@@ -1,0 +1,552 @@
+:root {
+  color-scheme: light dark;
+  --cell-w: 88px;
+  --cell-h: 96px;
+  --gap: 8px;
+  --pad: 10px;
+  --sans: "Segoe UI", "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", sans-serif;
+  --serif: Georgia, "Times New Roman", "Songti SC", "SimSun", serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: transparent;
+}
+
+body {
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+}
+
+button,
+select {
+  font-family: var(--sans);
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.floating-app {
+  --rows: 2;
+  --cols: 3;
+  --text: #1f2a23;
+  --text-soft: #445148;
+  --muted: #6d7a71;
+  --line: rgba(68, 86, 72, 0.16);
+  --line-strong: rgba(68, 86, 72, 0.28);
+  --chrome-bg: rgba(255, 255, 255, 0.55);
+  --card-bg: rgba(255, 255, 255, 0.74);
+  --card-hover: rgba(255, 255, 255, 0.92);
+  --input-bg: rgba(255, 255, 255, 0.74);
+  --accent: #2f6b4f;
+  --accent-soft: rgba(47, 107, 79, 0.14);
+  --danger: #a33a32;
+  --danger-soft: rgba(163, 58, 50, 0.12);
+  --placeholder: #d8ded6;
+  --locked-bg: rgba(230, 233, 225, 0.7);
+  --glass-tint: transparent;
+  --solid-bg: rgba(247, 250, 246, 0.97);
+  --glass-border: rgba(255, 255, 255, 0.5);
+  --scroll-thumb: rgba(47, 107, 79, 0.36);
+  --toast-bg: rgba(31, 42, 35, 0.92);
+  --toast-text: #f8fbf9;
+  --shadow: 0 14px 38px rgba(24, 36, 28, 0.22);
+  position: relative;
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 16px;
+  color: var(--text);
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--glass-border), var(--shadow);
+  isolation: isolate;
+}
+
+.glass-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background: var(--glass-tint);
+  pointer-events: none;
+}
+
+.floating-dragbar,
+.floating-scroll,
+.floating-empty {
+  position: relative;
+  z-index: 1;
+}
+
+.theme-dark {
+  --text: #f0f4ef;
+  --text-soft: #d6ded7;
+  --muted: #aab5ac;
+  --line: rgba(255, 255, 255, 0.14);
+  --line-strong: rgba(255, 255, 255, 0.24);
+  --chrome-bg: rgba(20, 24, 21, 0.62);
+  --card-bg: rgba(27, 32, 28, 0.74);
+  --card-hover: rgba(36, 43, 37, 0.9);
+  --input-bg: rgba(35, 40, 36, 0.82);
+  --accent: #9cc9ad;
+  --accent-soft: rgba(156, 201, 173, 0.16);
+  --danger: #f0a39a;
+  --danger-soft: rgba(240, 163, 154, 0.12);
+  --placeholder: #414a43;
+  --locked-bg: rgba(38, 44, 39, 0.78);
+  --solid-bg: rgba(19, 22, 20, 0.97);
+  --glass-border: rgba(255, 255, 255, 0.14);
+  --scroll-thumb: rgba(180, 210, 190, 0.36);
+  --toast-bg: rgba(240, 244, 239, 0.94);
+  --toast-text: #1f2a23;
+  --shadow: 0 16px 42px rgba(0, 0, 0, 0.42);
+}
+
+.tint-transparent {
+  --glass-tint: transparent;
+}
+
+.tint-white {
+  --glass-tint: rgba(255, 255, 255, 0.34);
+}
+
+.tint-black {
+  --glass-tint: rgba(8, 10, 9, 0.5);
+}
+
+.material-css .glass-layer {
+  -webkit-backdrop-filter: blur(22px) saturate(145%);
+  backdrop-filter: blur(22px) saturate(145%);
+}
+
+.material-native .glass-layer {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.material-off .glass-layer {
+  background: var(--solid-bg);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.floating-dragbar {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: space-between;
+  height: 40px;
+  padding: 0 7px 0 9px;
+  border-bottom: 0;
+  background: transparent;
+  cursor: grab;
+  -webkit-app-region: drag;
+}
+
+.floating-app.is-locked .floating-dragbar {
+  background: transparent;
+  cursor: default;
+  -webkit-app-region: no-drag;
+}
+
+.drag-title {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 5px;
+}
+
+.drag-grip {
+  flex: 0 0 auto;
+  color: var(--muted);
+  font-size: 9px;
+  letter-spacing: -2px;
+  line-height: 1;
+  opacity: 0.8;
+}
+
+.floating-app.is-locked .drag-grip {
+  opacity: 0.25;
+}
+
+.drag-label {
+  min-width: 0;
+  overflow: hidden;
+  padding: 2px 7px;
+  margin-left: -1px;
+  border-radius: 6px;
+  /* 未锁定与锁定的名称胶囊底色互换：未锁定用 chrome-bg，锁定用 locked-bg。 */
+  color: var(--text);
+  background: var(--chrome-bg);
+  font-size: 11.5px;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  -webkit-app-region: no-drag;
+}
+
+.drag-label:hover {
+  background: var(--accent-soft);
+}
+
+.floating-app.is-locked .drag-label {
+  color: var(--muted);
+  background: var(--locked-bg);
+}
+
+.lock-badge {
+  flex: 0 0 auto;
+  padding: 1px 5px;
+  border-radius: 999px;
+  color: var(--accent);
+  background: var(--accent-soft);
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.window-actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 1px;
+  -webkit-app-region: no-drag;
+}
+
+.icon-btn {
+  display: grid;
+  place-items: center;
+  width: 23px;
+  height: 23px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  color: var(--muted);
+  background: transparent;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.icon-btn:hover {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.icon-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.icon-btn.is-locked {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+#closeButton:hover {
+  color: var(--danger);
+  background: var(--danger-soft);
+}
+
+.floating-dragbar.is-renaming .lock-badge,
+.floating-dragbar.is-renaming .window-actions .icon-btn:not(#closeButton) {
+  display: none;
+}
+
+.drag-label-input {
+  min-width: 0;
+  width: 120px;
+  max-width: 60%;
+  height: 22px;
+  padding: 0 5px;
+  border: 1px solid var(--accent);
+  border-radius: 5px;
+  color: var(--text);
+  background: var(--input-bg);
+  font-family: var(--sans);
+  font-size: 11.5px;
+  font-weight: 650;
+  outline: none;
+  -webkit-app-region: no-drag;
+}
+
+.floating-scroll {
+  flex: 0 0 auto;
+  /* 34px 是原先文件数量栏的高度，去掉计数后并入内容区，窗口尺寸保持不变。 */
+  height: calc(var(--rows) * var(--cell-h) + (var(--rows) - 1) * var(--gap) + 2 * var(--pad) + 34px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-color: var(--scroll-thumb) transparent;
+  scrollbar-width: thin;
+}
+
+.floating-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.floating-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.floating-scroll::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: transparent;
+  transition: background 0.2s ease;
+}
+
+.floating-scroll.is-scrollable::-webkit-scrollbar-thumb {
+  background: var(--scroll-thumb);
+}
+
+.floating-scroll.is-scrollable:hover::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  opacity: 0.6;
+}
+
+.floating-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  gap: var(--gap);
+  align-content: start;
+  padding: var(--pad);
+  /* 原先文件数量栏占用的高度改为网格底部留白，刚好填满窗口。 */
+  padding-bottom: calc(var(--pad) + 34px);
+}
+
+.file-cell {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  height: var(--cell-h);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 8px 5px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--card-bg);
+  cursor: pointer;
+  user-select: none;
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
+}
+
+.file-cell:hover {
+  border-color: var(--accent);
+  background: var(--card-hover);
+}
+
+.file-cell:active {
+  transform: scale(0.97);
+}
+
+.file-cell.is-dragging {
+  opacity: 0.35;
+}
+
+.file-cell.drop-before::before,
+.file-cell.drop-after::after {
+  content: "";
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+  pointer-events: none;
+}
+
+.file-cell.drop-before::before {
+  left: -5px;
+}
+
+.file-cell.drop-after::after {
+  right: -5px;
+}
+
+.file-icon {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  overflow: hidden;
+}
+
+.file-icon img {
+  display: block;
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  -webkit-user-drag: none;
+}
+
+.file-icon svg {
+  display: block;
+  width: 32px;
+  height: 32px;
+}
+
+.file-icon-emoji {
+  display: block;
+  font-size: 26px;
+  line-height: 1;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.12));
+}
+
+.file-icon.is-icon-loading > svg {
+  animation: icon-loading-pulse 1s ease-in-out infinite;
+}
+
+@keyframes icon-loading-pulse {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+.icon-placeholder {
+  display: block;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--placeholder);
+  animation: placeholder-pulse 1.1s ease-in-out infinite;
+}
+
+.floating-app.is-collapsed .floating-scroll,
+.floating-app.is-collapsed .floating-empty,
+.floating-app.is-collapsed .floating-drop-overlay,
+.floating-app.is-collapsed .floating-toast {
+  display: none !important;
+}
+
+.file-name {
+  width: 100%;
+  overflow: hidden;
+  color: var(--text-soft);
+  font-size: 10px;
+  line-height: 1.35;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.floating-empty {
+  display: flex;
+  flex: 0 0 auto;
+  height: calc(var(--rows) * var(--cell-h) + (var(--rows) - 1) * var(--gap) + 2 * var(--pad) + 34px);
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.drag-ghost {
+  position: fixed;
+  top: -1000px;
+  left: -1000px;
+  opacity: 0.62;
+  pointer-events: none;
+  transform: scale(0.96);
+}
+
+.floating-drop-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 15;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: 3px dashed var(--accent);
+  border-radius: inherit;
+  background: var(--accent-soft);
+  pointer-events: none;
+}
+
+.floating-app.is-drop-target {
+  box-shadow: inset 0 0 0 3px var(--accent), var(--shadow);
+}
+
+.floating-drop-caption {
+  color: var(--muted);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+}
+
+.floating-drop-name {
+  max-width: 100%;
+  padding: 0 10px;
+  overflow: hidden;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 650;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.floating-toast {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  left: 8px;
+  z-index: 20;
+  padding: 6px 8px;
+  border-radius: 8px;
+  color: var(--toast-text);
+  background: var(--toast-bg);
+  font-size: 10px;
+  line-height: 1.45;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.floating-toast.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@keyframes placeholder-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 0.95;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

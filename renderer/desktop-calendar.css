@@ -1,0 +1,526 @@
+/* Readable text surfaces, calendar flip view and note reading dialog. */
+
+:is(.calendar-widget, .todo-widget, .note-widget, .clipboard-widget, .search-widget)
+  .floating-app.theme-light .glass-layer {
+  background: rgba(255, 255, 255, 0.85) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(138%) !important;
+  backdrop-filter: blur(20px) saturate(138%) !important;
+}
+
+:is(.calendar-widget, .todo-widget, .note-widget, .clipboard-widget, .search-widget)
+  .floating-app.theme-dark .glass-layer {
+  background: rgba(30, 30, 30, 0.85) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(125%) !important;
+  backdrop-filter: blur(20px) saturate(125%) !important;
+}
+
+/* The performance mode intentionally removes blur, but text components still
+   keep a nearly opaque base so wallpaper texture never harms readability. */
+body.performance-mode :is(.calendar-widget, .todo-widget, .note-widget, .clipboard-widget, .search-widget)
+  .floating-app.theme-light {
+  background: rgba(255, 255, 255, 0.96) !important;
+}
+
+body.performance-mode :is(.calendar-widget, .todo-widget, .note-widget, .clipboard-widget, .search-widget)
+  .floating-app.theme-dark {
+  background: rgba(30, 30, 30, 0.96) !important;
+}
+
+/* Draggable todo items */
+
+.todo-item[draggable="true"] {
+  cursor: grab;
+}
+
+.todo-item[draggable="true"]:active {
+  cursor: grabbing;
+}
+
+.todo-item.is-dragging {
+  opacity: 0.42;
+}
+
+.todo-item[data-due-date]::before {
+  position: absolute;
+  top: 7px;
+  right: 34px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #e78222;
+  content: "";
+  pointer-events: none;
+}
+
+.todo-item {
+  position: relative;
+}
+
+/* Calendar front/back 3D flip */
+
+.calendar-panel {
+  gap: 0 !important;
+  perspective: 1100px;
+}
+
+.calendar-flipper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  flex: 1 1 auto;
+  transform-style: preserve-3d;
+  transition: transform 0.56s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.calendar-panel.is-flipped .calendar-flipper {
+  transform: rotateY(180deg);
+}
+
+.calendar-face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  flex-direction: column;
+  gap: 9px;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.calendar-front {
+  z-index: 2;
+  transform: rotateY(0deg);
+}
+
+.calendar-back {
+  z-index: 1;
+  gap: 8px;
+  padding: 1px;
+  transform: rotateY(180deg);
+}
+
+.calendar-panel.is-flipped .calendar-front {
+  pointer-events: none;
+}
+
+.calendar-panel:not(.is-flipped) .calendar-back {
+  pointer-events: none;
+}
+
+.calendar-day {
+  position: relative;
+  display: flex;
+  padding: 0;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  outline: none;
+  color: var(--text);
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: clamp(11px, 3.35cqw, 14px);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  line-height: 1;
+  transition:
+    background-color 0.14s ease,
+    border-color 0.14s ease,
+    color 0.14s ease,
+    transform 0.14s ease;
+}
+
+.calendar-day:hover,
+.calendar-day:focus-visible {
+  border-color: var(--line-strong);
+  background: var(--card-hover);
+}
+
+.calendar-day:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.calendar-day-number {
+  display: block;
+  line-height: 1;
+  text-shadow: 0 1px 0 color-mix(in srgb, var(--glass-border) 55%, transparent);
+}
+
+.calendar-day.is-weekend {
+  color: var(--danger);
+  opacity: 1;
+}
+
+.calendar-day.is-muted {
+  color: var(--muted);
+  opacity: 0.58;
+}
+
+.calendar-day.is-today {
+  border-color: var(--accent);
+  color: var(--solid-bg);
+  background: var(--accent);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.18);
+  font-weight: 800;
+}
+
+.calendar-day.is-today:hover,
+.calendar-day.is-today:focus-visible {
+  border-color: var(--accent);
+  color: var(--solid-bg);
+  background: var(--accent);
+}
+
+.calendar-day.is-today .calendar-day-number {
+  font-weight: 800;
+  text-shadow: none;
+}
+
+/* 待办圆点：绝对定位悬浮在日期数字的右上角。
+   之前用 bottom + translateX(-50%) 居中在底边，正好压在数字背景上，
+   和选中态的橙色糊在一起；改到右上角后既躲开数字，也不参与布局。 */
+.calendar-task-dot {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  display: block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #ef7c1a;
+  box-shadow: 0 0 0 0.5px color-mix(in srgb, var(--solid-bg) 70%, transparent);
+  pointer-events: none;
+}
+
+/* 当天 / 选中态是橙底，圆点必须反白才看得清。 */
+.calendar-day.is-today .calendar-task-dot,
+.calendar-day.is-todo-drop-target .calendar-task-dot {
+  background: #ffffff;
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.06);
+}
+
+/* 当天待办全部完成时，圆点保留但变淡，避免误以为还有未完成的。 */
+.calendar-task-dot.is-all-done {
+  background: color-mix(in srgb, #ef7c1a 34%, transparent);
+  box-shadow: none;
+}
+
+.calendar-day.is-today .calendar-task-dot.is-all-done,
+.calendar-day.is-todo-drop-target .calendar-task-dot.is-all-done {
+  background: rgba(255, 255, 255, 0.58);
+}
+
+.calendar-tip {
+  flex: 0 0 auto;
+  margin: 0;
+  color: var(--muted);
+  font-size: clamp(8.5px, 2.55cqw, 10px);
+  line-height: 1.35;
+  text-align: center;
+}
+
+/* Green highlight when a todo is dragged over a date. */
+.calendar-day.is-todo-drop-target {
+  border-color: #3e9c68 !important;
+  color: #fff !important;
+  background: #3e9c68 !important;
+  box-shadow: 0 0 0 3px rgba(62, 156, 104, 0.22);
+  transform: scale(1.07);
+}
+
+.calendar-back.is-todo-drop-target {
+  border-radius: 11px;
+  outline: 2px dashed #3e9c68;
+  outline-offset: 3px;
+  background: rgba(62, 156, 104, 0.12);
+}
+
+.calendar-back-head {
+  display: flex;
+  min-width: 0;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.calendar-back-btn {
+  display: inline-flex;
+  height: 30px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  padding: 0 11px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: var(--solid-bg);
+  background: var(--accent);
+  box-shadow: 0 2px 9px rgba(0, 0, 0, 0.14);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: clamp(10px, 2.9cqw, 11.5px);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.calendar-back-btn:hover {
+  filter: brightness(1.07);
+}
+
+.calendar-back-btn:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+.calendar-selected-date {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--text-soft);
+  font-size: clamp(9.5px, 2.65cqw, 11px);
+  font-weight: 650;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.calendar-back-title {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--text);
+  font-size: clamp(10.5px, 3cqw, 12px);
+  font-weight: 700;
+}
+
+.calendar-back-count {
+  display: inline-flex;
+  min-height: 21px;
+  align-items: center;
+  padding: 0 7px;
+  border: 1px solid color-mix(in srgb, #e78222 28%, var(--line));
+  border-radius: 999px;
+  color: #a45c13;
+  background: rgba(231, 130, 34, 0.11);
+  font-size: 9.5px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.theme-dark .calendar-back-count {
+  color: #ffc27e;
+}
+
+.calendar-back-todos {
+  display: flex;
+  min-height: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 6px;
+  overflow-y: auto;
+  padding: 1px 2px 1px 1px;
+  scrollbar-width: thin;
+}
+
+.calendar-back-todo {
+  display: grid;
+  flex: 0 0 auto;
+  grid-template-columns: 20px minmax(0, 1fr);
+  min-height: 34px;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--card-bg);
+  cursor: pointer;
+}
+
+.calendar-back-todo:hover {
+  background: var(--card-hover);
+}
+
+.calendar-back-todo-text {
+  overflow: hidden;
+  color: var(--text);
+  font-size: clamp(10.5px, 2.95cqw, 12px);
+  font-weight: 500;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.calendar-back-todo.is-done .calendar-back-todo-text {
+  color: var(--muted);
+  text-decoration: line-through;
+  text-decoration-color: var(--line-strong);
+}
+
+.calendar-back-empty {
+  display: flex;
+  min-height: 0;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 8px;
+  color: var(--muted);
+  font-size: clamp(9.5px, 2.75cqw, 11px);
+  line-height: 1.55;
+  text-align: center;
+}
+
+.calendar-back-hint {
+  flex: 0 0 auto;
+  margin: 0;
+  color: var(--muted);
+  font-size: clamp(8px, 2.45cqw, 9.5px);
+  line-height: 1.35;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .calendar-flipper {
+    transition: none;
+  }
+}
+
+/* Note reading dialog rendered on the desktop layer. */
+
+.layer-dialog.note-reader-dialog {
+  display: flex;
+  width: min(720px, calc(100vw - 48px));
+  max-height: min(760px, calc(100vh - 64px));
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+  background: rgba(24, 30, 26, 0.97);
+}
+
+.note-reader-head {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 22px 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.11);
+}
+
+.note-reader-heading-copy {
+  min-width: 0;
+}
+
+.note-reader-head h2 {
+  overflow: hidden;
+  margin: 0;
+  color: #f6faf7;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.note-reader-head p {
+  margin: 4px 0 0;
+  color: rgba(244, 247, 243, 0.55);
+  font-size: 10.5px;
+  line-height: 1.4;
+}
+
+.note-reader-close {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  place-items: center;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 8px;
+  color: rgba(244, 247, 243, 0.7);
+  background: rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+  font: inherit;
+  font-size: 17px;
+  line-height: 1;
+}
+
+.note-reader-close:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.layer-dialog .note-reader-content {
+  min-height: 220px;
+  flex: 1 1 auto;
+  margin: 0;
+  padding: 22px;
+  overflow-y: auto;
+  color: #f2f6f3;
+  background: rgba(255, 255, 255, 0.025);
+  font-family: var(--sans);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.78;
+  overflow-wrap: anywhere;
+  tab-size: 2;
+  user-select: text;
+  white-space: pre-wrap;
+}
+
+.note-reader-actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 18px 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.note-reader-action-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.note-reader-copy {
+  min-width: 104px;
+}
+
+.note-reader-copy:disabled {
+  cursor: default;
+  opacity: 0.58;
+}
+
+@media (max-width: 600px) {
+  .layer-dialog.note-reader-dialog {
+    width: calc(100vw - 28px);
+    max-height: calc(100vh - 36px);
+  }
+
+  .note-reader-head {
+    padding: 16px 16px 12px;
+  }
+
+  .layer-dialog .note-reader-content {
+    padding: 16px;
+    font-size: 15px;
+  }
+
+  .note-reader-actions {
+    align-items: stretch;
+    flex-direction: column;
+    padding: 12px 14px 14px;
+  }
+
+  .note-reader-action-group {
+    justify-content: flex-end;
+  }
+}

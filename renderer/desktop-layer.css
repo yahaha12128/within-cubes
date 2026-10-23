@@ -1,0 +1,780 @@
+/* Full-desktop renderer. Reuses the existing component appearance while
+   replacing every native child window with one absolutely-positioned layer. */
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: transparent;
+  pointer-events: none;
+}
+
+body {
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.desktop-stage {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.desktop-widget-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.desktop-stage.is-hidden .desktop-widget-layer {
+  display: none;
+}
+
+/* Unassigned desktop files replace Explorer's hidden SysListView32. The grid
+   flows top-to-bottom in columns, matching the native desktop arrangement. */
+.desktop-icon-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  display: grid;
+  width: 100%;
+  height: 100%;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(auto-fill, 96px);
+  grid-auto-columns: 88px;
+  gap: 6px;
+  padding: 10px 12px;
+  align-content: start;
+  justify-content: start;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.desktop-stage.is-hidden .desktop-icon-layer {
+  display: none;
+}
+
+.desktop-icon {
+  position: relative;
+  display: flex;
+  width: 88px;
+  height: 96px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 5px;
+  padding: 6px 4px 4px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  color: #fff;
+  cursor: default;
+  font-family: inherit;
+  pointer-events: auto;
+  text-align: center;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.78);
+  user-select: none;
+  -webkit-user-select: none;
+  transition: background-color 0.12s ease, border-color 0.12s ease;
+}
+
+.desktop-icon:hover {
+  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.desktop-icon:focus-visible {
+  outline: 2px solid var(--system-accent, #4f8fe8);
+  outline-offset: 1px;
+}
+
+.desktop-icon .file-icon {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+}
+
+.desktop-icon .file-icon svg,
+.desktop-icon .file-icon img {
+  width: 100%;
+  height: 100%;
+}
+
+.desktop-icon .file-name {
+  display: -webkit-box;
+  width: 100%;
+  max-height: 2.5em;
+  overflow: hidden;
+  color: #fff;
+  font-size: 11px;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+  text-overflow: ellipsis;
+  white-space: normal;
+  word-break: break-word;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.desktop-icon.is-dragging {
+  opacity: 0.4;
+}
+
+.desktop-icon .file-color-tag {
+  top: 4px;
+  right: 6px;
+}
+
+body.is-focus-mode .desktop-icon {
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+.desktop-widget {
+  position: absolute;
+  container-type: inline-size;
+  pointer-events: auto;
+  touch-action: none;
+  -webkit-app-region: no-drag;
+  will-change: left, top;
+}
+
+.desktop-widget .floating-app {
+  width: 100%;
+  height: 100%;
+}
+
+.desktop-widget .floating-dragbar,
+.desktop-widget .drag-label,
+.desktop-widget .window-actions,
+.desktop-widget .widget-app,
+.desktop-widget .widget-app button {
+  -webkit-app-region: no-drag;
+}
+
+.desktop-widget .floating-dragbar {
+  cursor: grab;
+}
+
+.desktop-widget.is-locked .floating-dragbar {
+  cursor: default;
+}
+
+.desktop-widget.is-moving .floating-dragbar,
+.desktop-widget.is-moving .widget-app {
+  cursor: grabbing;
+}
+
+.desktop-widget.is-moving {
+  transition: none !important;
+}
+
+.desktop-widget .widget-app {
+  cursor: grab;
+}
+
+.desktop-widget.is-locked .widget-app {
+  cursor: default;
+}
+
+.desktop-widget.is-moving .widget-app {
+  cursor: grabbing;
+}
+
+.desktop-widget .widget-app button,
+.desktop-widget .widget-app input,
+.desktop-widget .widget-app textarea,
+.desktop-widget .widget-app select,
+.desktop-widget .widget-app a {
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-app-region: no-drag;
+}
+
+.desktop-widget .widget-app input[type="text"],
+.desktop-widget .widget-app textarea {
+  cursor: text;
+}
+
+body.is-moving,
+body.is-file-dragging {
+  cursor: grabbing;
+}
+
+/* Dragging must never start a text selection: the blue highlight following the
+   cursor is what made the drag look like it was flickering. */
+.desktop-widget {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.desktop-widget input,
+.desktop-widget textarea,
+.desktop-widget [contenteditable="true"] {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* While a component is being dragged, every other component stops receiving
+   pointer events, so the cursor can never "land" on a neighbour and break the
+   gesture mid-drag. */
+body.is-moving .desktop-widget:not(.is-moving) {
+  pointer-events: none;
+}
+
+/* Pinned to 9999 for the duration of the drag — hint the compositor so the
+   left/top writes stay on the fast path. */
+.desktop-widget.is-drag-pinned {
+  will-change: left, top;
+}
+
+.desktop-widget.is-drag-pinned .widget-app {
+  cursor: grabbing;
+}
+
+.desktop-widget .floating-dragbar .drag-label {
+  cursor: inherit;
+}
+
+.desktop-widget .floating-app.is-collapsed {
+  height: 100%;
+}
+
+.desktop-widget .floating-scroll {
+  scrollbar-color: var(--scroll-thumb) transparent;
+}
+
+/* The original widget pages measured against the viewport. The full desktop
+   layer needs the clock to scale against its own card, not 3840px of screen. */
+.widget-widget .clock-time {
+  font-size: clamp(30px, 12cqw, 64px);
+}
+
+.widget-widget .clock-date {
+  font-size: clamp(12px, 4.4cqw, 15px);
+  font-weight: 550;
+}
+
+.widget-widget .clock-weekday {
+  font-size: clamp(11px, 4.1cqw, 14px);
+}
+
+.widget-widget .clock-text {
+  font-size: clamp(11px, 3.9cqw, 14px);
+}
+
+.widget-widget .widget-body {
+  z-index: 2;
+  padding: clamp(12px, 4.6cqw, 18px);
+}
+
+/* Categories and widgets share the same tinted glass base. The overlay is an
+   rgba contrast wash, not an opaque fill, so custom colors remain visible. */
+.desktop-widget .floating-app::after {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background: rgba(8, 12, 9, 0.3);
+  content: "";
+  pointer-events: none;
+}
+
+.desktop-widget .floating-app.theme-light::after {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.desktop-widget .floating-app.tint-transparent::after {
+  background: rgba(8, 12, 9, 0.46);
+}
+
+.widget-widget .widget-bg,
+.widget-widget .glass-layer {
+  z-index: 0;
+}
+
+.widget-widget .clock-time,
+.widget-widget .clock-date,
+.widget-widget .clock-weekday,
+.widget-widget .clock-text,
+.widget-widget .music-copy h2,
+.widget-widget .music-copy p,
+.widget-widget .music-times {
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.28);
+}
+
+.widget-widget .floating-app.theme-light .clock-time,
+.widget-widget .floating-app.theme-light .clock-date,
+.widget-widget .floating-app.theme-light .clock-weekday,
+.widget-widget .floating-app.theme-light .clock-text,
+.widget-widget .floating-app.theme-light .music-copy h2,
+.widget-widget .floating-app.theme-light .music-copy p,
+.widget-widget .floating-app.theme-light .music-times {
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.28);
+}
+
+.widget-widget .music-panel {
+  padding: 2px;
+}
+
+.widget-widget .music-control:disabled,
+.widget-widget .music-control.is-unsupported {
+  opacity: 0.42;
+}
+
+/* An invisible eight-direction frame covers the card border. There is no
+   decorative bottom-right resize grip; only the edge hit zones are used. */
+.widget-resize-handle {
+  position: absolute;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  touch-action: none;
+}
+
+.desktop-widget.is-locked .widget-resize-handle,
+.category-widget.is-collapsed .widget-resize-handle {
+  display: none;
+}
+
+.widget-resize-zone {
+  position: absolute;
+  pointer-events: auto;
+  touch-action: none;
+}
+
+.widget-resize-zone.is-n {
+  top: 0;
+  right: 12px;
+  left: 12px;
+  height: 8px;
+  cursor: ns-resize;
+}
+
+.widget-resize-zone.is-s {
+  right: 12px;
+  bottom: 0;
+  left: 12px;
+  height: 8px;
+  cursor: ns-resize;
+}
+
+.widget-resize-zone.is-e {
+  top: 12px;
+  right: 0;
+  bottom: 12px;
+  width: 8px;
+  cursor: ew-resize;
+}
+
+.widget-resize-zone.is-w {
+  top: 12px;
+  bottom: 12px;
+  left: 0;
+  width: 8px;
+  cursor: ew-resize;
+}
+
+.widget-resize-zone.is-ne {
+  top: 0;
+  right: 0;
+  width: 14px;
+  height: 14px;
+  cursor: nesw-resize;
+}
+
+.widget-resize-zone.is-nw {
+  top: 0;
+  left: 0;
+  width: 14px;
+  height: 14px;
+  cursor: nwse-resize;
+}
+
+.widget-resize-zone.is-se {
+  right: 0;
+  bottom: 0;
+  width: 14px;
+  height: 14px;
+  cursor: nwse-resize;
+}
+
+.widget-resize-zone.is-sw {
+  bottom: 0;
+  left: 0;
+  width: 14px;
+  height: 14px;
+  cursor: nesw-resize;
+}
+
+/* Unified lock / more controls, present on every component card. */
+.component-actions {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 75;
+  display: flex;
+  gap: 4px;
+  pointer-events: none;
+  -webkit-app-region: no-drag;
+}
+
+.component-action {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(12, 18, 14, 0.35);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1;
+  opacity: 0.5;
+  pointer-events: auto;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+  transition:
+    opacity 0.15s ease,
+    color 0.15s ease,
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+  -webkit-app-region: no-drag;
+}
+
+.component-action svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
+.component-more svg circle {
+  fill: currentColor;
+  stroke: none;
+}
+
+.component-action:hover,
+.component-action:focus-visible {
+  border-color: rgba(255, 255, 255, 0.42);
+  background: rgba(12, 18, 14, 0.62);
+  opacity: 1;
+}
+
+.component-lock {
+  color: rgba(210, 214, 210, 0.6);
+  filter: grayscale(1);
+}
+
+.component-lock.is-locked {
+  border-color: #ff6b4a;
+  color: #fff;
+  background: rgba(255, 94, 58, 0.42);
+  box-shadow: 0 0 8px rgba(255, 107, 74, 0.55);
+  filter: none;
+  opacity: 0.95;
+}
+
+.component-lock.is-locked:hover,
+.component-lock.is-locked:focus-visible {
+  opacity: 1;
+  background: rgba(255, 94, 58, 0.58);
+}
+
+/* Reserve room for the unified controls in the existing headers. */
+.category-widget .window-actions {
+  padding-right: 54px;
+}
+
+.widget-widget .panel-head {
+  padding-right: 54px;
+}
+
+.desktop-widget.is-resizing {
+  transition: none !important;
+  will-change: left, top, width, height;
+}
+
+body.is-resizing,
+body.is-resizing * {
+  cursor: var(--resize-cursor, nwse-resize) !important;
+  user-select: none !important;
+}
+
+.category-drop-hint {
+  position: absolute;
+  inset: 0;
+  z-index: 15;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed var(--accent);
+  border-radius: inherit;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.05em;
+  pointer-events: none;
+}
+
+.desktop-widget.is-file-drop-target {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 18px;
+}
+
+.desktop-widget.is-file-drop-target .floating-app {
+  box-shadow: inset 0 0 0 2px var(--accent), var(--shadow);
+}
+
+.category-widget .floating-grid {
+  min-height: 100%;
+}
+
+.category-widget .file-cell {
+  touch-action: none;
+}
+
+.category-widget .file-cell:hover {
+  z-index: 2;
+}
+
+.layer-toast {
+  position: fixed;
+  right: 24px;
+  bottom: 36px;
+  z-index: 9999;
+  max-width: 340px;
+  padding: 8px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  background: rgba(18, 24, 20, 0.92);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
+  color: #f3f7f3;
+  font-size: 11px;
+  line-height: 1.5;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(5px);
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+
+.layer-toast.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.layer-toast.is-error {
+  border-color: rgba(255, 141, 141, 0.26);
+  background: rgba(58, 23, 23, 0.94);
+}
+
+/* Keep the native file drag ghost attached to the source card. */
+.category-widget .drag-ghost {
+  position: fixed;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .desktop-widget,
+  .layer-toast,
+  .desktop-widget *,
+  .desktop-widget *::before,
+  .desktop-widget *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Drag hover expansion must never be clipped by the card container. */
+.desktop-widget.category-widget.is-drag-raised,
+.desktop-widget.category-widget.is-drag-raised .floating-app,
+.desktop-widget.category-widget.is-drag-raised .floating-scroll {
+  overflow: visible;
+}
+
+.desktop-widget.category-widget.is-drag-raised {
+  z-index: 9999;
+}
+
+/* ── 折叠：标题栏常驻 + 内容区平滑过渡 ────────────────────────────────
+   不使用 display:none。卡片高度做过渡，内容区保持展开时的自然高度并被
+   overflow:hidden 裁掉，同时淡出、内边距收拢，摘要行淡入，因此展开与收起
+   两个方向都有动画。 */
+/* 收起高度的唯一来源：
+   · 功能组件（时钟除外）——76px，即现有的那一档；
+   · 收纳组件（五大分类 + 快速收纳）——恰为功能组件的一半，38px，折成一条
+     扁平收纳盒。
+   折叠只改高度，宽度永远沿用 positionWidget 写入的行内 width，不参与过渡。 */
+.desktop-widget {
+  --widget-collapsed-height: 76px;
+  --widget-collapsed-height-compact: calc(var(--widget-collapsed-height) / 2);
+  --widget-collapse-duration: 300ms;
+}
+
+.desktop-widget.widget-widget {
+  transition:
+    height var(--widget-collapse-duration) ease-in-out,
+    min-height var(--widget-collapse-duration) ease-in-out;
+}
+
+/* 拖拽与缩放必须紧跟鼠标，不能被折叠过渡拖慢。 */
+.desktop-widget.is-moving,
+.desktop-widget.is-resizing {
+  transition: none !important;
+}
+
+/* 折叠高度覆盖 positionWidget 写入的行内高度；移除类名后行内值自动恢复。 */
+.desktop-widget.is-collapsed {
+  height: var(--widget-collapsed-height) !important;
+  min-height: var(--widget-collapsed-height) !important;
+}
+
+/* 收纳组件（五大文件分类 + 快速收纳）：收起高度 = 功能组件的一半。
+   宽度不变，只压高度，所以折叠后是一条和原来一样宽、却只有一半厚的收纳盒。 */
+.desktop-widget.category-widget.is-collapsed,
+.desktop-widget.quick-widget.is-collapsed {
+  height: var(--widget-collapsed-height-compact) !important;
+  min-height: var(--widget-collapsed-height-compact) !important;
+}
+
+/* 分类卡片折叠后只剩 40px 的标题栏，而卡片只有 38px 高。让标题栏直接收到
+   卡片高度，图标行才能在新高度里垂直居中，不会被裁掉底边。
+   这里用固定值而不是 100%：100% 在过渡刚开始时等于展开高度，标题行会先跳到
+   卡片中间再滑上去。 */
+.desktop-widget.category-widget.is-collapsed .floating-dragbar {
+  height: var(--widget-collapsed-height-compact);
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/* 内容区容器：裁剪 + 淡出，自身高度由卡片高度带动。 */
+.desktop-widget.widget-widget .widget-app {
+  opacity: 1;
+  transition: opacity 220ms ease-in-out;
+}
+
+.desktop-widget.widget-widget.is-collapsed .widget-app {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.desktop-widget.widget-widget .widget-body {
+  transition:
+    opacity var(--widget-collapse-duration) ease-in-out,
+    padding-top var(--widget-collapse-duration) ease-in-out,
+    padding-bottom var(--widget-collapse-duration) ease-in-out;
+}
+
+.desktop-widget.widget-widget.is-collapsed .widget-body {
+  padding-top: 0;
+  padding-bottom: 0;
+  opacity: 0;
+}
+
+/* 过渡期间内容区保持展开高度，避免中途重排：视觉上是内容整体向上滑出。 */
+.desktop-widget.widget-widget.is-collapsed .widget-body,
+.desktop-widget.widget-widget.is-collapse-animating .widget-body {
+  min-height: var(--widget-content-height, 0px);
+}
+
+/* 折叠态不参与缩放手势，但也不切断内容区的过渡。 */
+.desktop-widget.is-collapsed .widget-resize-handle,
+.desktop-widget.is-collapsed .widget-resize-zone {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.widget-collapsed-summary {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-sizing: border-box;
+  width: 100%;
+  height: var(--widget-collapsed-height, 76px);
+  padding: 0 18px;
+  border: 1px solid var(--line, rgba(0, 0, 0, 0.08));
+  border-radius: 16px;
+  background: var(--card-bg, rgba(255, 255, 255, 0.86));
+  box-shadow: var(--shadow, 0 6px 18px rgba(15, 23, 42, 0.12));
+  overflow: hidden;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(-6px) scale(0.995);
+  pointer-events: none;
+  transition:
+    opacity 220ms ease-in-out,
+    transform var(--widget-collapse-duration) cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.desktop-widget.is-collapsed .widget-collapsed-summary {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+/* 快速收纳属于收纳组件：折叠后卡片只有 38px 高，摘要条必须同步变薄，
+   否则会从卡片下沿溢出，圆角和背景也会被裁掉一截。 */
+.desktop-widget.quick-widget .widget-collapsed-summary {
+  height: var(--widget-collapsed-height-compact);
+  border-radius: 16px;
+}
+
+.desktop-widget.is-collapsed .widget-collapsed-summary:focus-visible {
+  outline: 2px solid var(--accent, #2f6b4f);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .desktop-widget.widget-widget,
+  .desktop-widget.widget-widget .widget-app,
+  .desktop-widget.widget-widget .widget-body,
+  .widget-collapsed-summary {
+    transition-duration: 1ms;
+  }
+}
+
+.widget-summary-label {
+  position: relative;
+  flex: none;
+  padding-right: 11px;
+  font: 500 12px/1 var(--sans, system-ui, sans-serif);
+  color: var(--muted, #6b7280);
+}
+
+.widget-summary-label::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 1px;
+  height: 12px;
+  transform: translateY(-50%);
+  background: var(--line, rgba(0, 0, 0, 0.12));
+}
+
+.widget-summary-value {
+  flex: 1 1 auto;
+  min-width: 0;
+  font: 500 14px/1.3 var(--sans, system-ui, sans-serif);
+  color: var(--text, #111827);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

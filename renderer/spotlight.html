@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: file:;"
+  >
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>方寸格搜索</title>
+  <link rel="stylesheet" href="spotlight.css">
+</head>
+<body>
+  <main class="spotlight-panel" role="dialog" aria-modal="true" aria-label="全局搜索">
+    <div class="spotlight-search-row">
+      <svg class="spotlight-search-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="11" cy="11" r="6"></circle>
+        <path d="m16 16 4 4"></path>
+      </svg>
+      <input
+        id="spotlightInput"
+        class="spotlight-input"
+        type="text"
+        placeholder="搜索桌面、分类与快速收纳…"
+        autocomplete="off"
+        spellcheck="false"
+        aria-label="搜索文件"
+        aria-controls="spotlightResults"
+        aria-autocomplete="list"
+      >
+      <kbd class="spotlight-escape" aria-hidden="true">Esc</kbd>
+    </div>
+
+    <div
+      class="spotlight-results"
+      id="spotlightResults"
+      role="listbox"
+      aria-label="搜索结果"
+    ></div>
+
+    <p class="spotlight-message" id="spotlightMessage">
+      输入文件名开始搜索
+    </p>
+
+    <footer class="spotlight-footer" aria-hidden="true">
+      <span><kbd>↑</kbd><kbd>↓</kbd> 选择</span>
+      <span><kbd>↵</kbd> 打开</span>
+      <span><kbd>Esc</kbd> 关闭</span>
+      <span class="spotlight-brand">方寸格 · Spotlight</span>
+    </footer>
+  </main>
+
+  <script src="spotlight.js"></script>
+</body>
+</html>

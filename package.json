@@ -1,0 +1,22 @@
+{
+  "name": "within-cubes",
+  "productName": "方寸格",
+  "version": "0.3.0",
+  "private": true,
+  "description": "方寸格 · 把桌面整理成清晰、安静、随时可用的方寸之地",
+  "main": "main.js",
+  "author": "方寸格",
+  "scripts": {
+    "start": "electron .",
+    "build:win": "electron-builder --win",
+    "test": "node --test test/organizer.test.js test/logger.test.js test/undo.test.js test/rollback.test.js test/history.test.js test/file-types.test.js test/floating.test.js test/floating-config.test.js test/widget-data.test.js test/system-icons.test.js test/category-map.test.js test/legacy-migration.test.js test/manual-categories.test.js test/snap.test.js test/media-session.test.js test/file-attributes.test.js test/organized-items.test.js test/migration.test.js test/desktop-additions.test.js test/clipboard-history.test.js test/smart-theme.test.js test/pomodoro-time.test.js test/tab-groups.test.js test/file-cards.test.js test/time-capsule.test.js test/system-calendar.test.js test/pomodoro-history.test.js test/achievements.test.js test/shortcuts.test.js test/app-icon.test.js test/workerw.test.js test/todo-csv.test.js"
+  },
+  "devDependencies": {
+    "electron": "^44.9.0",
+    "electron-builder": "^26.15.3"
+  },
+  "dependencies": {
+    "koffi": "^3.3.3",
+    "windows-media-sessions": "^1.0.3"
+  }
+}

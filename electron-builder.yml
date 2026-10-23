@@ -1,0 +1,68 @@
+appId: com.within.cubes
+productName: 方寸格
+
+directories:
+  output: dist
+  buildResources: build
+
+files:
+  - package.json
+  - main.js
+  - preload.js
+  - desktop-preload.js
+  - floating-preload.js
+  - guides-preload.js
+  - spotlight-preload.js
+  - widget-preload.js
+  - achievements.json
+  - renderer/**/*
+  - src/**/*
+  # ---- 发布元数据：随应用一起分发，安装后可在资源目录查看 ----
+  - LICENSE
+  - PRIVACY.md
+  - CHANGELOG.md
+  # ---- asar 瘦身：剔除源码 / 文档 / 测试 / sourcemap ----
+  # 注意：koffi 的运行时入口是 src/koffi/index.cjs，所以只能剔除
+  # src/koffi/src（C++ 源码）与 lib、vendor、doc，不能整目录排除 src。
+  - "!node_modules/koffi/doc{,/**/*}"
+  - "!node_modules/koffi/lib{,/**/*}"
+  - "!node_modules/koffi/vendor{,/**/*}"
+  - "!node_modules/koffi/src/koffi/src{,/**/*}"
+  - "!node_modules/koffi/src/koffi/CMakeLists.txt"
+  - "!node_modules/koffi/cnoke.cjs"
+  - "!node_modules/koffi/*.md"
+  - "!node_modules/**/{test,tests,__tests__,__mocks__,doc,docs,example,examples}/**/*"
+  - "!node_modules/**/*.map"
+  - "!node_modules/**/*.ts"
+  - "!node_modules/**/README*"
+  - "!node_modules/**/CHANGELOG*"
+  - "!node_modules/**/.github/**/*"
+
+asarUnpack:
+  - node_modules/windows-media-sessions/bin/**/*
+  # koffi 3.x 的原生库在独立平台包 @koromix/koffi-win32-x64 里，必须解包才能加载。
+  - node_modules/@koromix/**/*
+
+extraResources:
+  - from: node_modules/windows-media-sessions/bin/win-x64/windows-media-sessions-backend.exe
+    to: windows-media-sessions-backend.exe
+  - from: build/icon.ico
+    to: icon.ico
+
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+  icon: build/icon.ico
+  artifactName: WithinCubes-Setup-${version}-${arch}.${ext}
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  installerIcon: build/icon.ico
+  uninstallerIcon: build/icon.ico
+  installerHeaderIcon: build/icon.ico

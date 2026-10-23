@@ -1,0 +1,128 @@
+/* Album artwork is scoped to the music widget card. The desktop layer itself
+   must never paint an opaque or image background. */
+html,
+body,
+.desktop-stage,
+.desktop-widget-layer {
+  background: transparent !important;
+}
+
+.music-card-cover {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  background-color: #1c2420;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  isolation: isolate;
+}
+
+.music-card-cover[hidden] {
+  display: none !important;
+}
+
+.music-card-cover::before {
+  position: absolute;
+  z-index: 0;
+  inset: -14%;
+  background-image: inherit;
+  background-position: center;
+  background-size: cover;
+  content: "";
+  filter: blur(24px) saturate(1.28) brightness(0.92);
+  transform: scale(1.05);
+}
+
+.music-card-cover-veil {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.13), transparent 52%),
+    linear-gradient(155deg, rgba(8, 12, 10, 0.3), rgba(8, 12, 10, 0.64));
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+  backdrop-filter: blur(20px) saturate(1.2);
+}
+
+.desktop-widget[data-widget-key="music"].has-music-cover .floating-app {
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.16),
+    0 16px 42px rgba(0, 0, 0, 0.32);
+}
+
+.desktop-widget[data-widget-key="music"].has-music-cover .music-copy h2 {
+  color: #ffffff;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.48);
+}
+
+.desktop-widget[data-widget-key="music"].has-music-cover .music-copy p,
+.desktop-widget[data-widget-key="music"].has-music-cover .music-times {
+  color: rgba(255, 255, 255, 0.8);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.48);
+}
+
+.desktop-widget[data-widget-key="music"].has-music-cover .music-disc {
+  border-color: rgba(255, 255, 255, 0.32);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.18);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+.desktop-widget[data-widget-key="music"].has-music-cover .music-seek {
+  background: rgba(255, 255, 255, 0.26);
+}
+
+.desktop-widget[data-widget-key="music"].has-music-cover .music-seek-fill {
+  background: #ffffff;
+}
+
+.desktop-widget[data-widget-key="music"].has-music-cover .music-control {
+  border-color: rgba(255, 255, 255, 0.34);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.16);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+.desktop-widget[data-widget-key="music"].has-music-cover .music-control:hover:not(.is-unsupported) {
+  border-color: rgba(255, 255, 255, 0.56);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.26);
+}
+
+.desktop-widget[data-widget-key="music"].has-music-cover .music-control:disabled,
+.desktop-widget[data-widget-key="music"].has-music-cover .music-control:disabled:hover,
+.desktop-widget[data-widget-key="music"].has-music-cover .music-control.is-unsupported {
+  border-color: rgba(255, 255, 255, 0.22);
+  color: rgba(255, 255, 255, 0.62);
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.desktop-widget[data-widget-key="music"].has-music-cover .music-control:focus-visible {
+  outline-color: #ffffff;
+}
+
+.desktop-widget[data-widget-key="music"].has-music-cover .music-control--play {
+  border-color: #ffffff;
+  color: #173023;
+  background: #ffffff;
+}
+
+.desktop-widget[data-widget-key="music"].has-music-cover .music-control--play:hover {
+  border-color: #ffffff;
+  color: #173023;
+  background: #ffffff;
+  filter: brightness(0.94);
+}
+
+body.performance-mode .music-card-cover-veil,
+body.performance-mode .desktop-widget[data-widget-key="music"].has-music-cover .music-disc,
+body.performance-mode .desktop-widget[data-widget-key="music"].has-music-cover .music-control {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}

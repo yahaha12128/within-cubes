@@ -1,0 +1,569 @@
+[
+  {
+    "id": "ach-001",
+    "name": "初来乍到",
+    "difficulty": 1,
+    "description": "首次安装并打开方寸格",
+    "isSecret": false
+  },
+  {
+    "id": "ach-002",
+    "name": "初次体检",
+    "difficulty": 1,
+    "description": "完成第一次桌面扫描",
+    "isSecret": false
+  },
+  {
+    "id": "ach-003",
+    "name": "收纳新手",
+    "difficulty": 1,
+    "description": "完成第一次文件整理",
+    "isSecret": false
+  },
+  {
+    "id": "ach-004",
+    "name": "合体！",
+    "difficulty": 1,
+    "description": "首次创建 1 个标签组",
+    "isSecret": false
+  },
+  {
+    "id": "ach-005",
+    "name": "滴答滴答",
+    "difficulty": 1,
+    "description": "首次开启番茄钟",
+    "isSecret": false
+  },
+  {
+    "id": "ach-006",
+    "name": "小有成就",
+    "difficulty": 1,
+    "description": "首次成功完成 1 个番茄钟",
+    "isSecret": false
+  },
+  {
+    "id": "ach-007",
+    "name": "任务管家",
+    "difficulty": 1,
+    "description": "首次添加 1 条待办",
+    "isSecret": false
+  },
+  {
+    "id": "ach-008",
+    "name": "划掉烦恼",
+    "difficulty": 1,
+    "description": "首次勾选完成 1 条待办",
+    "isSecret": false
+  },
+  {
+    "id": "ach-009",
+    "name": "灵感捕捉",
+    "difficulty": 1,
+    "description": "首次保存 1 条随手记",
+    "isSecret": false
+  },
+  {
+    "id": "ach-010",
+    "name": "记忆碎片",
+    "difficulty": 1,
+    "description": "首次在剪贴板中点击复制",
+    "isSecret": false
+  },
+  {
+    "id": "ach-011",
+    "name": "换个心情",
+    "difficulty": 1,
+    "description": "首次为组件设置自定义背景",
+    "isSecret": false
+  },
+  {
+    "id": "ach-012",
+    "name": "调色盘",
+    "difficulty": 1,
+    "description": "首次更改全局颜色",
+    "isSecret": false
+  },
+  {
+    "id": "ach-013",
+    "name": "隐身术",
+    "difficulty": 1,
+    "description": "首次开启访客防窥模式",
+    "isSecret": false
+  },
+  {
+    "id": "ach-014",
+    "name": "我的地盘",
+    "difficulty": 1,
+    "description": "首次解锁全局布局并移动组件",
+    "isSecret": false
+  },
+  {
+    "id": "ach-015",
+    "name": "全盘寻宝",
+    "difficulty": 1,
+    "description": "首次使用全局搜索框",
+    "isSecret": false
+  },
+  {
+    "id": "ach-016",
+    "name": "断舍离",
+    "difficulty": 1,
+    "description": "首次将文件拖入回收站",
+    "isSecret": false
+  },
+  {
+    "id": "ach-017",
+    "name": "任意门",
+    "difficulty": 1,
+    "description": "首次使用文件夹映射入口",
+    "isSecret": false
+  },
+  {
+    "id": "ach-018",
+    "name": "了解方寸格",
+    "difficulty": 1,
+    "description": "首次查看“关于”页面",
+    "isSecret": false
+  },
+  {
+    "id": "ach-019",
+    "name": "百步穿杨",
+    "difficulty": 2,
+    "description": "累计整理 100 个文件",
+    "isSecret": false
+  },
+  {
+    "id": "ach-020",
+    "name": "收纳达人",
+    "difficulty": 2,
+    "description": "累计整理 500 个文件",
+    "isSecret": false
+  },
+  {
+    "id": "ach-021",
+    "name": "井井有条",
+    "difficulty": 2,
+    "description": "累计整理 1000 个文件",
+    "isSecret": false
+  },
+  {
+    "id": "ach-022",
+    "name": "空间大师",
+    "difficulty": 2,
+    "description": "累计整理 5000 个文件",
+    "isSecret": false
+  },
+  {
+    "id": "ach-023",
+    "name": "渐入佳境",
+    "difficulty": 2,
+    "description": "累计专注 10 小时",
+    "isSecret": false
+  },
+  {
+    "id": "ach-024",
+    "name": "心流体验",
+    "difficulty": 2,
+    "description": "累计专注 50 小时",
+    "isSecret": false
+  },
+  {
+    "id": "ach-025",
+    "name": "时间领主",
+    "difficulty": 2,
+    "description": "累计专注 100 小时",
+    "isSecret": false
+  },
+  {
+    "id": "ach-026",
+    "name": "分类狂魔",
+    "difficulty": 2,
+    "description": "创建过 5 个不同的标签组",
+    "isSecret": false
+  },
+  {
+    "id": "ach-027",
+    "name": "聚散离合",
+    "difficulty": 2,
+    "description": "完成 10 次标签组拆分",
+    "isSecret": false
+  },
+  {
+    "id": "ach-028",
+    "name": "清单控",
+    "difficulty": 2,
+    "description": "累计添加 50 条待办",
+    "isSecret": false
+  },
+  {
+    "id": "ach-029",
+    "name": "执行力MAX",
+    "difficulty": 2,
+    "description": "累计完成 50 条待办",
+    "isSecret": false
+  },
+  {
+    "id": "ach-030",
+    "name": "灵感喷泉",
+    "difficulty": 2,
+    "description": "累计保存 20 条随手记",
+    "isSecret": false
+  },
+  {
+    "id": "ach-031",
+    "name": "防偷窥大师",
+    "difficulty": 2,
+    "description": "使用访客模式 10 次",
+    "isSecret": false
+  },
+  {
+    "id": "ach-032",
+    "name": "顺应天时",
+    "difficulty": 2,
+    "description": "应用智能节律主题 20 次",
+    "isSecret": false
+  },
+  {
+    "id": "ach-033",
+    "name": "小试牛刀",
+    "difficulty": 2,
+    "description": "连续使用 7 天",
+    "isSecret": false
+  },
+  {
+    "id": "ach-034",
+    "name": "月度全勤",
+    "difficulty": 2,
+    "description": "连续使用 30 天",
+    "isSecret": false
+  },
+  {
+    "id": "ach-035",
+    "name": "效率爆发",
+    "difficulty": 2,
+    "description": "单日专注达到 5 个番茄钟",
+    "isSecret": false
+  },
+  {
+    "id": "ach-036",
+    "name": "深度工作",
+    "difficulty": 2,
+    "description": "单次番茄钟专注超过 90 分钟",
+    "isSecret": false
+  },
+  {
+    "id": "ach-037",
+    "name": "键盘侠",
+    "difficulty": 2,
+    "description": "累计使用全局快捷键 100 次",
+    "isSecret": false
+  },
+  {
+    "id": "ach-038",
+    "name": "极客审美",
+    "difficulty": 2,
+    "description": "导入 1 套第三方图标包",
+    "isSecret": false
+  },
+  {
+    "id": "ach-039",
+    "name": "备份大师",
+    "difficulty": 2,
+    "description": "导出桌面布局配置 1 次",
+    "isSecret": false
+  },
+  {
+    "id": "ach-040",
+    "name": "无缝流转",
+    "difficulty": 2,
+    "description": "拖拽文件到外部程序 10 次",
+    "isSecret": false
+  },
+  {
+    "id": "ach-041",
+    "name": "快捷记录",
+    "difficulty": 2,
+    "description": "使用“将剪贴板生成为随手记”10 次",
+    "isSecret": false
+  },
+  {
+    "id": "ach-042",
+    "name": "搬运工",
+    "difficulty": 2,
+    "description": "累计在格子里使用 Ctrl+C/V 复制粘贴 50 次",
+    "isSecret": false
+  },
+  {
+    "id": "ach-043",
+    "name": "大扫除",
+    "difficulty": 2,
+    "description": "单日整理文件达到 50 个",
+    "isSecret": false
+  },
+  {
+    "id": "ach-044",
+    "name": "物尽其用",
+    "difficulty": 2,
+    "description": "累计开启 5 种不同的桌面组件",
+    "isSecret": false
+  },
+  {
+    "id": "ach-045",
+    "name": "唤醒记忆",
+    "difficulty": 2,
+    "description": "触发 10 次“时间胶囊”的褪灰复彩",
+    "isSecret": false
+  },
+  {
+    "id": "ach-046",
+    "name": "千日之约",
+    "difficulty": 3,
+    "description": "连续使用 1000 天",
+    "isSecret": false
+  },
+  {
+    "id": "ach-047",
+    "name": "五年高考",
+    "difficulty": 3,
+    "description": "连续使用 1825 天",
+    "isSecret": false
+  },
+  {
+    "id": "ach-048",
+    "name": "桌面粉碎机",
+    "difficulty": 3,
+    "description": "累计整理 50000 个文件",
+    "isSecret": false
+  },
+  {
+    "id": "ach-049",
+    "name": "时间熔炉",
+    "difficulty": 3,
+    "description": "累计专注 1000 小时",
+    "isSecret": false
+  },
+  {
+    "id": "ach-050",
+    "name": "时空管理局",
+    "difficulty": 3,
+    "description": "累计专注 5000 小时",
+    "isSecret": false
+  },
+  {
+    "id": "ach-051",
+    "name": "肝帝降临",
+    "difficulty": 3,
+    "description": "单日专注达到 16 小时",
+    "isSecret": false
+  },
+  {
+    "id": "ach-052",
+    "name": "无情打卡机",
+    "difficulty": 3,
+    "description": "连续 100 天每天至少完成 8 个番茄钟",
+    "isSecret": false
+  },
+  {
+    "id": "ach-053",
+    "name": "空间折叠",
+    "difficulty": 3,
+    "description": "在一个标签组内塞入超过 500 个文件",
+    "isSecret": false
+  },
+  {
+    "id": "ach-054",
+    "name": "绝对零度",
+    "difficulty": 3,
+    "description": "连续 365 天，桌面未整理文件数量始终为 0",
+    "isSecret": false
+  },
+  {
+    "id": "ach-055",
+    "name": "键盘之神",
+    "difficulty": 3,
+    "description": "累计使用全局快捷键 100,000 次",
+    "isSecret": false
+  },
+  {
+    "id": "ach-056",
+    "name": "赛博清道夫",
+    "difficulty": 3,
+    "description": "累计移入回收站 10,000 个文件",
+    "isSecret": false
+  },
+  {
+    "id": "ach-057",
+    "name": "重度强迫症",
+    "difficulty": 3,
+    "description": "把 100 个文件全部手动打上不同的颜色标签并排序",
+    "isSecret": false
+  },
+  {
+    "id": "ach-058",
+    "name": "入定十年",
+    "difficulty": 3,
+    "description": "开启 3D 景深和音乐律动，保持专注 100 小时",
+    "isSecret": false
+  },
+  {
+    "id": "ach-059",
+    "name": "全知全能",
+    "difficulty": 3,
+    "description": "累计使用悬浮透视预览 10,000 次",
+    "isSecret": false
+  },
+  {
+    "id": "ach-060",
+    "name": "数据狂魔",
+    "difficulty": 3,
+    "description": "导出桌面布局配置 100 次",
+    "isSecret": false
+  },
+  {
+    "id": "ach-061",
+    "name": "特工之王",
+    "difficulty": 3,
+    "description": "在开启防窥模式的情况下，累计工作 100 小时",
+    "isSecret": false
+  },
+  {
+    "id": "ach-062",
+    "name": "万物重构",
+    "difficulty": 3,
+    "description": "让系统 99% 的文件都脱离了原生图标",
+    "isSecret": false
+  },
+  {
+    "id": "ach-063",
+    "name": "多啦A梦的遗憾",
+    "difficulty": 3,
+    "description": "映射超过 50 个外部磁盘文件夹入口",
+    "isSecret": false
+  },
+  {
+    "id": "ach-064",
+    "name": "穿越时空",
+    "difficulty": 4,
+    "description": "把电脑系统时间调回过去，触发一次整理",
+    "isSecret": true
+  },
+  {
+    "id": "ach-065",
+    "name": "未来来信",
+    "difficulty": 4,
+    "description": "把电脑系统时间调到未来，保存一条随手记",
+    "isSecret": true
+  },
+  {
+    "id": "ach-066",
+    "name": "反客为主",
+    "difficulty": 4,
+    "description": "把系统原生“回收站”图标，拖进一个文件分类格子里",
+    "isSecret": true
+  },
+  {
+    "id": "ach-067",
+    "name": "触发彩蛋",
+    "difficulty": 4,
+    "description": "在搜索框输入“bug”、“作弊”或“admin”并回车",
+    "isSecret": true
+  },
+  {
+    "id": "ach-068",
+    "name": "手速惊人",
+    "difficulty": 4,
+    "description": "在 10 秒内，连续双击折叠/展开同一个组件 20 次",
+    "isSecret": true
+  },
+  {
+    "id": "ach-069",
+    "name": "薛定谔的文件",
+    "difficulty": 4,
+    "description": "把同一个文件拖出桌面，再拖回格子，重复 10 次",
+    "isSecret": true
+  },
+  {
+    "id": "ach-070",
+    "name": "摸鱼狂魔",
+    "difficulty": 4,
+    "description": "番茄钟倒计时期间，1 分钟内疯狂开关防窥模式 10 次",
+    "isSecret": true
+  },
+  {
+    "id": "ach-071",
+    "name": "改名狂魔",
+    "difficulty": 4,
+    "description": "给同一个组件连续重命名 10 次",
+    "isSecret": true
+  },
+  {
+    "id": "ach-072",
+    "name": "全员恶人",
+    "difficulty": 4,
+    "description": "把桌面上所有的格子全部改成同一个名字",
+    "isSecret": true
+  },
+  {
+    "id": "ach-073",
+    "name": "彩虹制造者",
+    "difficulty": 4,
+    "description": "利用颜色标签，把一个格子里的文件按红橙黄绿青蓝紫排序",
+    "isSecret": true
+  },
+  {
+    "id": "ach-074",
+    "name": "像素级强迫症",
+    "difficulty": 4,
+    "description": "利用吸附功能，把 5 个组件排列成绝对完美的一条直线",
+    "isSecret": true
+  },
+  {
+    "id": "ach-075",
+    "name": "致敬经典",
+    "difficulty": 4,
+    "description": "把全局颜色调成纯黑，开启极简图标，体验 10 分钟",
+    "isSecret": true
+  },
+  {
+    "id": "ach-076",
+    "name": "万物皆可组",
+    "difficulty": 4,
+    "description": "把“时钟”和“音乐播放器”强行合并在同一个标签组里",
+    "isSecret": true
+  },
+  {
+    "id": "ach-077",
+    "name": "黑洞边缘",
+    "difficulty": 4,
+    "description": "把一个组件拖到屏幕边缘，只露出一半，保持 1 分钟不移动",
+    "isSecret": true
+  },
+  {
+    "id": "ach-078",
+    "name": "极简主义",
+    "difficulty": 4,
+    "description": "关闭所有桌面组件，清理掉所有图标，用快捷键专注 10 分钟",
+    "isSecret": true
+  },
+  {
+    "id": "ach-079",
+    "name": "深夜食堂",
+    "difficulty": 4,
+    "description": "在凌晨 3:00 到 4:00 之间，点开一次番茄钟",
+    "isSecret": true
+  },
+  {
+    "id": "ach-080",
+    "name": "再来一次",
+    "difficulty": 4,
+    "description": "在设置里清空所有数据，并重新观看一遍新手引导",
+    "isSecret": true
+  },
+  {
+    "id": "ach-081",
+    "name": "你就是光",
+    "difficulty": 4,
+    "description": "达成以上所有 80 个成就",
+    "isSecret": true
+  }
+]

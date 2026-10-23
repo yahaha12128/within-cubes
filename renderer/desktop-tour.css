@@ -1,0 +1,442 @@
+/* Full-screen onboarding rendered inside the WorkerW desktop layer. The
+   four mask panels create a real click-through spotlight hole: everything
+   outside the highlighted target is dimmed, while the target itself stays
+   available for the interaction the step is describing. */
+
+.desktop-tour {
+  position: fixed;
+  inset: 0;
+  z-index: 50000;
+  pointer-events: none;
+  color: #f4f6f2;
+  font-family: var(--sans, "Segoe UI", sans-serif);
+}
+
+.desktop-tour[hidden] {
+  display: none;
+}
+
+.tour-mask {
+  position: fixed;
+  z-index: 1;
+  background: rgba(4, 8, 6, 0.64);
+  /* Keep the dimming purely visual: the user can actually follow the drag,
+     hover and Ctrl+wheel invitations while the tour is open. */
+  pointer-events: none;
+  transition:
+    top 240ms ease,
+    right 240ms ease,
+    bottom 240ms ease,
+    left 240ms ease,
+    width 240ms ease,
+    height 240ms ease;
+}
+
+.tour-spotlight {
+  position: fixed;
+  z-index: 3;
+  border: 2px solid rgba(242, 204, 126, 0.98);
+  border-radius: var(--tour-radius, 18px);
+  box-shadow:
+    0 0 0 1px rgba(255, 242, 208, 0.28),
+    0 0 24px rgba(235, 190, 100, 0.38),
+    inset 0 0 24px rgba(235, 190, 100, 0.08);
+  pointer-events: none;
+  transition:
+    top 240ms ease,
+    left 240ms ease,
+    width 240ms ease,
+    height 240ms ease,
+    border-radius 240ms ease;
+}
+
+.tour-spotlight::after {
+  position: absolute;
+  inset: -9px;
+  border: 1px dashed rgba(247, 216, 153, 0.38);
+  border-radius: calc(var(--tour-radius, 18px) + 8px);
+  content: "";
+  animation: tour-spotlight-breathe 2.6s ease-in-out infinite;
+}
+
+.tour-spotlight[hidden] {
+  display: none;
+}
+
+@keyframes tour-spotlight-breathe {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 0.95; }
+}
+
+/* Literal border on the highlighted component, in addition to the fixed
+   spotlight frame. This also makes the selected DOM element obvious to
+   assistive technology when the tour is inspected. */
+.is-onboarding-highlight {
+  outline: 3px solid #f2cc7e !important;
+  outline-offset: 5px !important;
+}
+
+/* The highlighted component must be the one users can actually hover or
+   click, even when the user's layout has overlapping cards. */
+.category-widget.is-onboarding-highlight,
+.category-widget:has(.is-onboarding-highlight),
+.widget-widget.is-onboarding-highlight {
+  z-index: 40000 !important;
+}
+
+.file-cell.is-onboarding-highlight {
+  z-index: 5;
+}
+
+.tour-card {
+  position: fixed;
+  z-index: 5;
+  width: min(430px, calc(100vw - 40px));
+  max-height: calc(100vh - 40px);
+  overflow: auto;
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(110, 149, 112, 0.22), transparent 45%),
+    linear-gradient(145deg, rgba(25, 34, 28, 0.97), rgba(12, 18, 14, 0.97));
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.46),
+    0 2px 0 rgba(255, 255, 255, 0.05) inset;
+  color: #f4f6f2;
+  pointer-events: auto;
+  outline: none;
+  animation: tour-card-enter 220ms ease-out both;
+}
+
+.tour-card::before {
+  position: absolute;
+  top: 0;
+  right: 22px;
+  left: 22px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(242, 204, 126, 0.62), transparent);
+  content: "";
+}
+
+.tour-card.is-welcome {
+  width: min(580px, calc(100vw - 40px));
+  padding: 38px;
+  border-radius: 28px;
+}
+
+@keyframes tour-card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.tour-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.tour-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  color: rgba(225, 235, 226, 0.72);
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+}
+
+.tour-kicker-mark {
+  width: 9px;
+  height: 9px;
+  flex: 0 0 9px;
+  border: 1px solid rgba(242, 204, 126, 0.84);
+  border-radius: 2px;
+  background: rgba(242, 204, 126, 0.16);
+  box-shadow: 7px 7px 0 -4px rgba(242, 204, 126, 0.48);
+}
+
+.tour-counter {
+  flex: 0 0 auto;
+  color: rgba(242, 204, 126, 0.92);
+  font-family: ui-monospace, "Cascadia Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+}
+
+.tour-progress {
+  display: flex;
+  gap: 6px;
+  margin: 18px 0 20px;
+}
+
+.tour-progress span {
+  height: 3px;
+  flex: 1;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  transition: background-color 180ms ease;
+}
+
+.tour-progress span.is-active {
+  background: #e7c47d;
+  box-shadow: 0 0 10px rgba(231, 196, 125, 0.4);
+}
+
+.tour-title {
+  margin: 0;
+  color: #fbfcf9;
+  font-size: 24px;
+  font-weight: 720;
+  letter-spacing: -0.035em;
+  line-height: 1.28;
+}
+
+.tour-card.is-welcome .tour-title {
+  margin-top: 10px;
+  font-size: clamp(30px, 5vw, 38px);
+  letter-spacing: -0.05em;
+}
+
+.tour-copy {
+  margin: 12px 0 0;
+  color: rgba(226, 234, 226, 0.76);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.tour-card.is-welcome .tour-copy {
+  max-width: 46ch;
+  margin-top: 14px;
+  color: rgba(233, 239, 232, 0.82);
+  font-size: 15px;
+  line-height: 1.9;
+}
+
+.tour-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 26px;
+}
+
+.tour-action-main {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 9px;
+}
+
+.tour-btn {
+  min-height: 38px;
+  padding: 0 16px;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    color 150ms ease,
+    transform 150ms ease;
+}
+
+.tour-btn:active {
+  transform: translateY(1px);
+}
+
+.tour-btn:focus-visible {
+  outline: 2px solid #f2cc7e;
+  outline-offset: 2px;
+}
+
+.tour-btn--ghost {
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(239, 243, 239, 0.8);
+}
+
+.tour-btn--ghost:hover {
+  border-color: rgba(255, 255, 255, 0.26);
+  background: rgba(255, 255, 255, 0.09);
+  color: #fff;
+}
+
+.tour-btn--primary {
+  border-color: rgba(244, 215, 157, 0.82);
+  background: linear-gradient(180deg, #f0d293, #dcb56c);
+  box-shadow: 0 8px 20px rgba(179, 129, 47, 0.2);
+  color: #1c241d;
+}
+
+.tour-btn--primary:hover {
+  border-color: #f8e3b6;
+  background: linear-gradient(180deg, #f7dead, #e4c078);
+  color: #121912;
+}
+
+.tour-btn[hidden] {
+  display: none;
+}
+
+.tour-btn:disabled {
+  cursor: wait;
+  opacity: 0.56;
+}
+
+.tour-card.is-welcome .tour-actions {
+  margin-top: 32px;
+}
+
+/* Only used when the real desktop has no suitable target yet, e.g. a brand
+   new profile with no files. It keeps the spotlight useful without inventing
+   files in the user's actual categories. */
+.tour-demo-target {
+  position: fixed;
+  z-index: 2;
+  display: flex;
+  width: 138px;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  padding: 16px 12px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 16px;
+  background: rgba(248, 250, 247, 0.94);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+  color: #28352c;
+  pointer-events: none;
+  text-align: center;
+}
+
+.tour-demo-target[hidden] {
+  display: none;
+}
+
+.tour-demo-target[data-kind="file"] .tour-demo-icon,
+.tour-demo-target[data-kind="file"] .tour-demo-title,
+.tour-demo-target[data-kind="file"] .tour-demo-caption {
+  filter: grayscale(1);
+  opacity: 0.55;
+}
+
+.tour-demo-target[data-kind="achievement"] {
+  width: 210px;
+  padding: 18px 16px;
+  border-color: rgba(178, 133, 48, 0.32);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(244, 210, 138, 0.5), transparent 55%),
+    linear-gradient(145deg, #fffaf0, #f5ead2);
+}
+
+.tour-demo-target[data-kind="achievement"] .tour-demo-icon {
+  border-color: rgba(178, 133, 48, 0.28);
+  background: linear-gradient(145deg, #f8e7bc, #ebcf8a);
+}
+
+.tour-demo-target[data-kind="search"] {
+  width: min(360px, calc(100vw - 48px));
+  flex-direction: row;
+  gap: 12px;
+  padding: 16px 18px;
+  text-align: left;
+}
+
+.tour-demo-target[data-kind="search"] .tour-demo-icon {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  border-radius: 10px;
+  font-size: 22px;
+}
+
+.tour-demo-target[data-kind="search"] .tour-demo-title {
+  font-size: 12px;
+}
+
+.tour-demo-target[data-kind="search"] .tour-demo-caption {
+  margin-left: auto;
+  color: #50635a;
+  font-weight: 650;
+}
+
+.tour-demo-icon {
+  display: grid;
+  width: 52px;
+  height: 52px;
+  place-items: center;
+  border: 1px solid rgba(55, 104, 74, 0.2);
+  border-radius: 14px;
+  background: linear-gradient(145deg, #e6f0e9, #d6e5db);
+  font-size: 26px;
+}
+
+.tour-demo-title {
+  max-width: 100%;
+  overflow: hidden;
+  font-size: 11px;
+  font-weight: 650;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+}
+
+.tour-demo-caption {
+  color: #6a7a6e;
+  font-size: 9px;
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 620px) {
+  .tour-card {
+    padding: 20px;
+    border-radius: 18px;
+  }
+
+  .tour-card.is-welcome {
+    padding: 26px;
+  }
+
+  .tour-actions {
+    align-items: stretch;
+    flex-direction: column-reverse;
+    gap: 8px;
+  }
+
+  .tour-action-main {
+    justify-content: stretch;
+  }
+
+  .tour-btn--primary {
+    flex: 1;
+  }
+
+  .tour-btn--ghost {
+    width: 100%;
+  }
+
+  .tour-action-main .tour-btn--ghost {
+    width: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tour-card,
+  .tour-spotlight::after,
+  .tour-mask,
+  .tour-spotlight {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

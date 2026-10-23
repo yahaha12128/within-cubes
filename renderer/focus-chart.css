@@ -1,0 +1,632 @@
+/* Dashboard focus bar chart and NetEase adapter modal. */
+
+.dashboard-focus-chart {
+  --focus-chart-accent: #d97706;
+  --focus-chart-accent-hover: #b45309;
+  --focus-chart-grid: var(--ui-line);
+  display: block !important;
+  margin-top: 18px !important;
+  padding: 20px 22px 18px !important;
+}
+
+body.ui-dark .dashboard-focus-chart {
+  --focus-chart-accent: #cf7a22;
+  --focus-chart-accent-hover: #e09642;
+}
+
+.focus-chart-head {
+  display: flex;
+  min-width: 0;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.focus-chart-heading {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 12px;
+}
+
+.focus-chart-heading-copy {
+  min-width: 0;
+}
+
+.focus-chart-title-row {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.focus-chart-title-row h2 {
+  margin: 0 !important;
+  color: var(--ui-ink) !important;
+  font-family: var(--ui-font-display) !important;
+  font-size: var(--ui-title) !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.005em !important;
+  line-height: 1.4 !important;
+  text-align: left !important;
+}
+
+.focus-chart-heading-copy p {
+  margin: 2px 0 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-body);
+  line-height: 1.5;
+}
+
+.focus-chart-period {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  padding: 0 7px;
+  border: 1px solid color-mix(in srgb, var(--focus-chart-accent) 22%, var(--ui-line));
+  border-radius: 6px;
+  color: var(--focus-chart-accent-hover);
+  background: color-mix(in srgb, var(--focus-chart-accent) 8%, var(--ui-surface));
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.focus-chart-ranges {
+  flex: 0 0 auto;
+}
+
+.focus-chart-ranges button {
+  min-width: 58px !important;
+}
+
+.focus-chart-ranges button[aria-pressed="true"] {
+  color: var(--ui-ink) !important;
+  background: var(--ui-surface) !important;
+  box-shadow: 0 1px 2px rgba(17, 24, 39, 0.08) !important;
+  font-weight: 600 !important;
+}
+
+body.ui-dark .focus-chart-ranges button[aria-pressed="true"] {
+  background: var(--ui-surface-hover) !important;
+  box-shadow: none !important;
+}
+
+.focus-chart-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.focus-chart-stat {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  min-height: 34px;
+  padding: 5px 10px;
+  border: 1px solid var(--ui-line);
+  border-radius: 9px;
+  background: var(--ui-surface-soft);
+}
+
+.focus-chart-stat strong {
+  color: var(--ui-ink);
+  font-family: var(--ui-font-mono);
+  font-size: 17px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.focus-chart-stat span {
+  color: var(--ui-muted);
+  font-size: 10.5px;
+  line-height: 1.3;
+}
+
+.focus-chart-body {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.focus-chart-yaxis {
+  display: flex;
+  height: 186px;
+  flex-direction: column;
+  justify-content: space-between;
+  color: var(--ui-muted);
+  font-family: var(--ui-font-mono);
+  font-size: 9.5px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  text-align: right;
+}
+
+.focus-chart-yaxis span {
+  transform: translateY(-1px);
+}
+
+.focus-chart-plot {
+  position: relative;
+  height: 212px;
+  min-width: 0;
+}
+
+.focus-chart-gridlines {
+  position: absolute;
+  inset: 0 0 26px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.focus-chart-gridlines span {
+  width: 100%;
+  height: 1px;
+  background: var(--focus-chart-grid);
+}
+
+.focus-chart-bars {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+}
+
+.focus-chart-column {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 0 1px;
+  border-radius: 9px;
+  outline: none;
+  cursor: default;
+  transition: background-color 0.15s ease;
+}
+
+.focus-chart-column:hover,
+.focus-chart-column:focus-visible {
+  background: color-mix(in srgb, var(--focus-chart-accent) 5%, transparent);
+}
+
+.focus-chart-column:focus-visible {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--focus-chart-accent) 58%, transparent);
+}
+
+.focus-chart-track {
+  display: flex;
+  min-height: 0;
+  flex: 1 1 auto;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.focus-chart-bar {
+  display: block;
+  width: min(24px, 62%);
+  height: 0;
+  border-radius: 9px 9px 3px 3px;
+  background: var(--focus-chart-accent);
+  transform-origin: 50% 100%;
+  transition:
+    height 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.focus-chart-bar:not(.is-empty) {
+  min-height: 3px;
+}
+
+.focus-chart-bar.is-empty {
+  background: transparent;
+}
+
+.focus-chart-column:hover .focus-chart-bar:not(.is-empty),
+.focus-chart-column:focus-visible .focus-chart-bar:not(.is-empty) {
+  background: var(--focus-chart-accent-hover);
+  transform: translateY(-2px);
+}
+
+.focus-chart-label {
+  display: flex;
+  height: 26px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  color: var(--ui-muted);
+  font-size: 10px;
+  line-height: 1;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.focus-chart-label.is-blank {
+  visibility: hidden;
+}
+
+.focus-chart-tooltip {
+  position: absolute;
+  z-index: 4;
+  display: flex;
+  max-width: min(270px, calc(100vw - 64px));
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 10px;
+  border: 1px solid var(--ui-line);
+  border-radius: 9px;
+  color: var(--ui-ink);
+  background: var(--ui-surface);
+  box-shadow: 0 10px 28px -14px rgba(17, 24, 39, 0.42);
+  pointer-events: none;
+  transform: translate(-50%, -100%);
+  white-space: nowrap;
+}
+
+.focus-chart-tooltip[hidden] {
+  display: none !important;
+}
+
+.focus-chart-tooltip.is-below {
+  transform: translate(-50%, 0);
+}
+
+.focus-chart-tooltip strong {
+  overflow: hidden;
+  color: var(--ui-ink);
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+}
+
+.focus-chart-tooltip span {
+  color: var(--ui-muted);
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.focus-chart-empty {
+  margin: 14px 0 0;
+  color: var(--ui-muted);
+  font-size: 11.5px;
+  line-height: 1.6;
+}
+
+.focus-chart-table-wrap {
+  margin-top: 14px;
+  color: var(--ui-muted);
+  font-size: 11px;
+}
+
+.focus-chart-table-wrap[hidden] {
+  display: none;
+}
+
+.focus-chart-table-wrap summary {
+  width: fit-content;
+  color: var(--ui-muted);
+  cursor: pointer;
+  font-size: 11px;
+}
+
+.focus-chart-table {
+  max-height: 190px;
+  margin-top: 8px;
+  overflow: auto;
+  border: 1px solid var(--ui-line);
+  border-radius: 9px;
+}
+
+.focus-chart-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.focus-chart-table th,
+.focus-chart-table td {
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--ui-line);
+  text-align: left;
+}
+
+.focus-chart-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.focus-chart-table th {
+  position: sticky;
+  top: 0;
+  color: var(--ui-muted);
+  background: var(--ui-surface-soft);
+  font-weight: 600;
+}
+
+.dashboard-focus-chart.is-loading .focus-chart-summary,
+.dashboard-focus-chart.is-loading .focus-chart-body,
+.dashboard-focus-chart.is-loading .focus-chart-table-wrap {
+  opacity: 0.5;
+  transition: opacity 0.15s ease;
+}
+
+/* Clickable settings row */
+
+.settings-row-button {
+  cursor: pointer;
+}
+
+.settings-row-button:hover {
+  background: var(--ui-surface-soft);
+}
+
+.settings-row-button:focus-visible {
+  outline: 2px solid var(--ui-accent) !important;
+  outline-offset: -2px !important;
+}
+
+.settings-row-chevron {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  color: var(--ui-muted);
+}
+
+.settings-row-chevron .icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* NetEase Cloud Music adapter modal */
+
+.netease-adapter-panel {
+  width: min(680px, 100%) !important;
+}
+
+.netease-adapter-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.netease-adapter-head .settings-icon {
+  flex: 0 0 38px !important;
+  width: 38px !important;
+  height: 38px !important;
+}
+
+.netease-adapter-body {
+  padding: 0 24px 4px;
+  overflow-y: auto;
+}
+
+.netease-adapter-intro {
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--ui-line);
+  border-radius: 10px;
+  color: var(--ui-ink-2);
+  background: var(--ui-surface-soft);
+  font-size: var(--ui-body);
+  line-height: 1.7;
+}
+
+.netease-adapter-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.netease-adapter-step {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  align-items: start;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--ui-line);
+  border-radius: 10px;
+}
+
+.netease-adapter-step-index {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--ui-accent-strong);
+  background: var(--ui-accent-soft);
+  font-family: var(--ui-font-mono);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.netease-adapter-step strong {
+  color: var(--ui-ink);
+  font-size: var(--ui-body);
+  font-weight: 600;
+}
+
+.netease-adapter-step p {
+  margin: 2px 0 0;
+  color: var(--ui-muted);
+  font-size: 11.5px;
+  line-height: 1.55;
+}
+
+.netease-adapter-safety {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr);
+  align-items: start;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 12px 14px;
+  border: 1px solid color-mix(in srgb, var(--ui-success) 24%, var(--ui-line));
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--ui-success) 6%, var(--ui-surface));
+}
+
+.netease-adapter-safety-icon {
+  display: grid;
+  width: 26px;
+  height: 26px;
+  place-items: center;
+  color: var(--ui-success);
+}
+
+.netease-adapter-safety-icon .icon {
+  width: 19px;
+  height: 19px;
+}
+
+.netease-adapter-safety strong {
+  color: var(--ui-ink);
+  font-size: var(--ui-body);
+  font-weight: 600;
+}
+
+.netease-adapter-safety p {
+  margin: 3px 0 0;
+  color: var(--ui-muted);
+  font-size: 11.5px;
+  line-height: 1.6;
+}
+
+.netease-adapter-install {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 14px;
+  padding: 9px 11px;
+  border: 1px solid var(--ui-line);
+  border-radius: 9px;
+  background: var(--ui-surface-soft);
+}
+
+.netease-adapter-install span {
+  flex: 0 0 auto;
+  color: var(--ui-muted);
+  font-size: 10.5px;
+}
+
+.netease-adapter-install code {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--ui-ink-2);
+  font-family: var(--ui-font-mono);
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.netease-adapter-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.netease-adapter-actions .btn {
+  flex: 1 1 auto;
+  white-space: nowrap;
+}
+
+.netease-adapter-status {
+  margin: 10px 0 0;
+  color: var(--ui-muted);
+  font-size: 11px;
+  line-height: 1.55;
+  word-break: break-all;
+}
+
+.netease-adapter-status.is-success {
+  color: var(--ui-success);
+}
+
+.netease-adapter-status.is-error {
+  color: var(--ui-danger);
+}
+
+@media (max-width: 720px) {
+  .dashboard-focus-chart {
+    padding: 18px 16px 16px !important;
+  }
+
+  .focus-chart-head {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .focus-chart-ranges {
+    align-self: flex-start;
+  }
+
+  .focus-chart-body {
+    grid-template-columns: 30px minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .focus-chart-plot {
+    height: 194px;
+  }
+
+  .focus-chart-yaxis {
+    height: 168px;
+  }
+
+  .netease-adapter-body {
+    padding-right: 18px;
+    padding-left: 18px;
+  }
+
+  .netease-adapter-install {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .netease-adapter-install code {
+    width: 100%;
+  }
+
+  .netease-adapter-actions {
+    flex-direction: column;
+  }
+
+  .netease-adapter-actions .btn {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .focus-chart-bar,
+  .focus-chart-column {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .focus-chart-bar {
+    background: Highlight;
+    forced-color-adjust: none;
+  }
+
+  .focus-chart-gridlines span {
+    background: CanvasText;
+  }
+}

@@ -1,0 +1,1576 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: file:;"
+  >
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>方寸格 · Within Cubes</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="settings-extra.css">
+  <link rel="stylesheet" href="redesign.css">
+  <link rel="stylesheet" href="design-system.css">
+  <link rel="stylesheet" href="focus-chart.css">
+  <link rel="stylesheet" href="ui-polish.css">
+  <link rel="stylesheet" href="achievements.css">
+  <link rel="stylesheet" href="about.css">
+  <link rel="stylesheet" href="i18n.css">
+</head>
+<body>
+  <svg class="icon-sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="i-home" viewBox="0 0 24 24">
+      <path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z"/>
+    </symbol>
+    <symbol id="i-widgets" viewBox="0 0 24 24">
+      <rect x="4" y="4" width="7" height="7" rx="2"/>
+      <rect x="13" y="4" width="7" height="7" rx="2"/>
+      <rect x="4" y="13" width="7" height="7" rx="2"/>
+      <rect x="13" y="13" width="7" height="7" rx="2"/>
+    </symbol>
+    <symbol id="i-personalize" viewBox="0 0 24 24">
+      <path d="M4 7h5M15 7h5M4 12h10M17 12h3M4 17h3M13 17h7"/>
+      <circle cx="12" cy="7" r="2"/>
+      <circle cx="15" cy="12" r="2"/>
+      <circle cx="10" cy="17" r="2"/>
+    </symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24">
+      <path d="M4 7h9M17 7h3M4 17h3M11 17h9"/>
+      <circle cx="15" cy="7" r="2"/>
+      <circle cx="9" cy="17" r="2"/>
+      <path d="M4 12h16"/>
+      <circle cx="12" cy="12" r="2"/>
+    </symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9"/>
+      <path d="M3 12h18"/>
+      <ellipse cx="12" cy="12" rx="4.5" ry="9"/>
+    </symbol>
+    <symbol id="i-sparkles" viewBox="0 0 24 24">
+      <path d="m12 3 1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.6z"/>
+      <path d="m18 15 .9 2.1L21 18l-2.1.9L18 21l-.9-2.1L15 18l2.1-.9z"/>
+      <path d="m6 14 .7 1.6L8.3 16l-1.6.7L6 18.3l-.7-1.6L3.7 16l1.6-.4z"/>
+    </symbol>
+    <symbol id="i-magic-hat" viewBox="0 0 24 24">
+      <path d="M8 4h8v10H8z"/>
+      <path d="M8 11h8"/>
+      <path d="M4.5 14h15v2.5h-15z"/>
+      <path d="m19.2 2.2.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/>
+    </symbol>
+    <symbol id="i-wand" viewBox="0 0 24 24">
+      <path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72"/>
+      <path d="m14 7 3 3"/>
+      <path d="M5 6v4"/>
+      <path d="M19 14v4"/>
+      <path d="M10 2v2"/>
+      <path d="M7 8H3"/>
+      <path d="M21 16h-4"/>
+      <path d="M11 3H9"/>
+    </symbol>
+    <symbol id="i-trophy" viewBox="0 0 24 24">
+      <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
+      <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+      <path d="M4 22h16"/>
+      <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/>
+      <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
+      <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
+    </symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="4"/>
+      <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>
+    </symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24">
+      <path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/>
+    </symbol>
+    <symbol id="i-leaf" viewBox="0 0 24 24">
+      <path d="M5 19c0-8 5-13 14-14-1 9-6 14-14 14z"/>
+      <path d="M5 19c3-4 6-7 10-9"/>
+    </symbol>
+    <symbol id="i-gradient" viewBox="0 0 24 24">
+      <rect x="3" y="4" width="18" height="16" rx="2"/>
+      <path d="M3 14l7-7 11 11"/>
+      <path d="M3 18l5-5 5 5"/>
+    </symbol>
+    <symbol id="i-grip" viewBox="0 0 24 24">
+      <circle cx="9" cy="6" r="1"/><circle cx="15" cy="6" r="1"/>
+      <circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/>
+      <circle cx="9" cy="18" r="1"/><circle cx="15" cy="18" r="1"/>
+    </symbol>
+    <symbol id="i-clipboard" viewBox="0 0 24 24">
+      <rect x="5" y="5" width="14" height="16" rx="2"/>
+      <path d="M9 5V3.8A1.8 1.8 0 0 1 10.8 2h2.4A1.8 1.8 0 0 1 15 3.8V5"/>
+      <path d="M8.5 10h7M8.5 14h7M8.5 18h4"/>
+    </symbol>
+    <symbol id="i-note" viewBox="0 0 24 24">
+      <path d="M5 4h14a1 1 0 0 1 1 1v10l-5 5H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/>
+      <path d="M15 20v-5h5M8 9h8M8 13h5"/>
+    </symbol>
+    <symbol id="i-todo" viewBox="0 0 24 24">
+      <rect x="4" y="4" width="16" height="16" rx="3"/>
+      <path d="m8 12 2.5 2.5L16 9"/>
+    </symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24">
+      <rect x="3" y="5" width="18" height="16" rx="2"/>
+      <path d="M3 10h18M8 3v4M16 3v4"/>
+      <path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/>
+    </symbol>
+    <symbol id="i-timer" viewBox="0 0 24 24">
+      <circle cx="12" cy="13" r="8"/>
+      <path d="M12 9v4l2.5 1.5M9 2h6M12 3v2"/>
+    </symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9c.14.34.4.62.73.79.3.16.64.24.98.24H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+    </symbol>
+    <symbol id="i-info" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9"/>
+      <path d="M12 11v5"/>
+      <path d="M12 8h.01"/>
+    </symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24">
+      <path d="M4 20V10M10 20V4M16 20v-7M22 20V7"/>
+    </symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24">
+      <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67 0C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>
+    </symbol>
+    <symbol id="i-keyboard" viewBox="0 0 24 24">
+      <rect x="2" y="5" width="20" height="14" rx="2"/>
+      <path d="M6 9h.01M10 9h.01M14 9h.01M18 9h.01M6 12h.01M10 12h.01M14 12h.01M18 12h.01M8 15h8"/>
+    </symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24">
+      <path d="M4 7h16M4 12h16M4 17h16"/>
+    </symbol>
+    <symbol id="i-search" viewBox="0 0 24 24">
+      <circle cx="11" cy="11" r="6"/>
+      <path d="m16 16 4 4"/>
+    </symbol>
+    <symbol id="i-palette" viewBox="0 0 24 24">
+      <path d="M12 3a9 9 0 1 0 0 18h1.2a1.8 1.8 0 0 0 0-3.6h-.9a2.1 2.1 0 0 1 0-4.2h4.4A4.3 4.3 0 0 0 21 8.9C21 5.6 16.9 3 12 3z"/>
+      <circle cx="7.6" cy="10.2" r="1"/>
+      <circle cx="9.9" cy="6.9" r="1"/>
+      <circle cx="13.7" cy="6.5" r="1"/>
+    </symbol>
+    <symbol id="i-blur" viewBox="0 0 24 24">
+      <path d="m12 3 8 4.5-8 4.5-8-4.5z"/>
+      <path d="m4 12 8 4.5 8-4.5"/>
+      <path d="m4 16.5 8 4.5 8-4.5"/>
+    </symbol>
+    <symbol id="i-image" viewBox="0 0 24 24">
+      <rect x="3" y="4" width="18" height="16" rx="2"/>
+      <circle cx="9" cy="10" r="1.5"/>
+      <path d="m20 16-5-5-9 9"/>
+    </symbol>
+    <symbol id="i-layout" viewBox="0 0 24 24">
+      <rect x="3" y="4" width="18" height="16" rx="2"/>
+      <path d="M3 10h18M10 10v10"/>
+    </symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9"/>
+      <path d="M12 7v5l3 2"/>
+    </symbol>
+    <symbol id="i-music" viewBox="0 0 24 24">
+      <path d="M9 18V6l10-2v12"/>
+      <circle cx="6.5" cy="18" r="2.5"/>
+      <circle cx="16.5" cy="16" r="2.5"/>
+    </symbol>
+    <symbol id="i-window" viewBox="0 0 24 24">
+      <rect x="3" y="4" width="18" height="16" rx="2"/>
+      <path d="M3 9h18"/>
+    </symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24">
+      <path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/>
+      <circle cx="12" cy="12" r="3"/>
+    </symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24">
+      <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+    </symbol>
+    <symbol id="i-app" viewBox="0 0 24 24">
+      <rect x="4" y="4" width="7" height="7" rx="1.5"/>
+      <rect x="13" y="4" width="7" height="7" rx="1.5"/>
+      <rect x="4" y="13" width="7" height="7" rx="1.5"/>
+      <path d="M16.5 13.5v6M13.5 16.5h6"/>
+    </symbol>
+    <symbol id="i-document" viewBox="0 0 24 24">
+      <path d="M6 3h7l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/>
+      <path d="M13 3v5h5"/>
+      <path d="M8 13h8M8 17h6"/>
+    </symbol>
+    <symbol id="i-archive" viewBox="0 0 24 24">
+      <path d="M4 7h16v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/>
+      <path d="M3 4h18v3H3z"/>
+      <path d="M10 11h4"/>
+    </symbol>
+    <symbol id="i-power" viewBox="0 0 24 24">
+      <path d="M12 3v8"/>
+      <path d="M6.3 6.3a8 8 0 1 0 11.4 0"/>
+    </symbol>
+    <symbol id="i-chevron-down" viewBox="0 0 24 24">
+      <path d="m6 9 6 6 6-6"/>
+    </symbol>
+    <symbol id="i-chevron-right" viewBox="0 0 24 24">
+      <path d="m9 6 6 6-6 6"/>
+    </symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24">
+      <path d="M4 20h4l10-10a2.8 2.8 0 0 0-4-4L4 16z"/>
+      <path d="m13.5 6.5 4 4"/>
+    </symbol>
+    <symbol id="i-reset" viewBox="0 0 24 24">
+      <path d="M3 12a9 9 0 1 0 3-6.7"/>
+      <path d="M3 4v5h5"/>
+    </symbol>
+    <symbol id="i-locate" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="7"/>
+      <path d="M12 2v4M12 18v4M2 12h4M18 12h4"/>
+    </symbol>
+    <symbol id="i-undo" viewBox="0 0 24 24">
+      <path d="M9 7 4 12l5 5"/>
+      <path d="M4 12h9a7 7 0 0 1 7 7"/>
+    </symbol>
+    <symbol id="i-scan" viewBox="0 0 24 24">
+      <path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/>
+      <path d="M8 12h8"/>
+    </symbol>
+    <symbol id="i-eye-off" viewBox="0 0 24 24">
+      <path d="m3 3 18 18"/>
+      <path d="M10.6 5.9A9.7 9.7 0 0 1 12 5.8c6 0 9.5 6.2 9.5 6.2a17.4 17.4 0 0 1-3.2 3.9M6.5 7.5A17.1 17.1 0 0 0 2.5 12s3.5 6.2 9.5 6.2c1.3 0 2.5-.3 3.6-.8"/>
+      <path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>
+    </symbol>
+    <symbol id="i-target" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="8"/>
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
+    </symbol>
+    <symbol id="i-inbox" viewBox="0 0 24 24">
+      <path d="M4 5h16v14H4z"/>
+      <path d="M4 14h4l2 3h4l2-3h4"/>
+    </symbol>
+    <symbol id="i-arrow-up-right" viewBox="0 0 24 24">
+      <path d="M7 17 17 7M9 7h8v8"/>
+    </symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24">
+      <path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>
+    </symbol>
+    <symbol id="i-download" viewBox="0 0 24 24">
+      <path d="M12 4v11M7 11l5 5 5-5M5 20h14"/>
+    </symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24">
+      <path d="M12 20V9M7 13l5-5 5 5M5 4h14"/>
+    </symbol>
+    <symbol id="i-gift" viewBox="0 0 24 24">
+      <path d="M3 9h18v4H3zM5 13v8h14v-8M12 9v12M12 9C10 4 6 5 7 8M12 9c2-5 6-4 5-1"/>
+    </symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24">
+      <path d="M12 20s-7-4.6-7-9.4A4.1 4.1 0 0 1 12 8a4.1 4.1 0 0 1 7 2.6C19 15.4 12 20 12 20z"/>
+    </symbol>
+  </svg>
+
+  <div class="app-shell">
+    <div class="app-body">
+      <nav class="sidebar" id="sidebar" aria-label="主导航">
+        <div class="sidebar-nav">
+          <button class="nav-item is-active" id="navHome" type="button" data-page="home" aria-current="page" title="仪表盘">
+            <span class="nav-icon tone-blue" aria-hidden="true"><svg class="icon"><use href="#i-home"></use></svg></span>
+            <span class="nav-label">仪表盘</span>
+          </button>
+          <button class="nav-item" id="navOrganize" type="button" data-page="organize" title="桌面整理">
+            <span class="nav-icon tone-yellow" aria-hidden="true"><svg class="icon"><use href="#i-scan"></use></svg></span>
+            <span class="nav-label">桌面整理</span>
+          </button>
+          <button class="nav-item" id="navComponents" type="button" data-page="personalize" title="组件库">
+            <span class="nav-icon tone-purple" aria-hidden="true"><svg class="icon"><use href="#i-widgets"></use></svg></span>
+            <span class="nav-label">组件库</span>
+          </button>
+          <button class="nav-item" id="navGlobalSettings" type="button" data-page="widgets" title="全局设置">
+            <span class="nav-icon tone-green" aria-hidden="true"><svg class="icon"><use href="#i-sliders"></use></svg></span>
+            <span class="nav-label">全局设置</span>
+          </button>
+          <button class="nav-item" id="navSettings" type="button" data-page="settings" title="设置">
+            <span class="nav-icon tone-peach" aria-hidden="true"><svg class="icon"><use href="#i-settings"></use></svg></span>
+            <span class="nav-label">设置</span>
+          </button>
+          <button class="nav-item" id="navAbout" type="button" data-page="about" title="关于">
+            <span class="nav-icon tone-teal" aria-hidden="true"><svg class="icon"><use href="#i-info"></use></svg></span>
+            <span class="nav-label">关于</span>
+          </button>
+        </div>
+      </nav>
+
+      <main class="content">
+        <header class="content-head">
+          <div class="content-heading">
+            <h1 id="pageTitle">仪表盘</h1>
+            <p id="pageSubtitle">专注、待办与桌面组件状态。</p>
+          </div>
+          <div class="search-box" role="search">
+            <svg class="icon search-icon" aria-hidden="true"><use href="#i-search"></use></svg>
+            <input
+              id="settingsSearch"
+              type="search"
+              placeholder="搜索设置项或功能"
+              autocomplete="off"
+              spellcheck="false"
+              aria-label="搜索设置项或功能"
+            >
+            <button class="search-clear" id="searchClearButton" type="button" aria-label="清空搜索" hidden>×</button>
+          </div>
+        </header>
+
+        <p class="search-empty" id="searchEmpty" hidden>没有找到匹配的内容。</p>
+
+        <section class="page page-home" id="pageHome" aria-label="仪表盘">
+          <section class="dashboard-grid" id="dashboardGrid" aria-label="桌面概览">
+            <article class="ui-card grid-card dashboard-card tone-blue">
+              <header class="grid-card-head">
+                <span class="grid-card-icon" aria-hidden="true">
+                  <svg class="icon"><use href="#i-clock"></use></svg>
+                </span>
+              </header>
+              <div class="grid-card-body">
+                <h2 class="grid-card-title">时钟</h2>
+                <strong class="grid-card-value tabular-nums" id="dashClockValue">--:--</strong>
+                <p class="grid-card-meta" id="dashClockMeta">读取当前时间…</p>
+              </div>
+            </article>
+
+            <article
+              class="ui-card grid-card dashboard-card tone-green is-clickable"
+              id="dashTodoCard"
+              role="button"
+              tabindex="0"
+              aria-label="打开待办管理页"
+            >
+              <header class="grid-card-head">
+                <span class="grid-card-icon" aria-hidden="true">
+                  <svg class="icon"><use href="#i-todo"></use></svg>
+                </span>
+              </header>
+              <div class="grid-card-body">
+                <h2 class="grid-card-title">待办剩余</h2>
+                <strong class="grid-card-value tabular-nums" id="dashTodoValue">—</strong>
+                <p class="grid-card-meta" id="dashTodoMeta">正在读取待办状态…</p>
+              </div>
+            </article>
+
+            <article class="ui-card grid-card dashboard-card tone-pink">
+              <header class="grid-card-head">
+                <span class="grid-card-icon" aria-hidden="true">
+                  <svg class="icon"><use href="#i-timer"></use></svg>
+                </span>
+              </header>
+              <div class="grid-card-body">
+                <h2 class="grid-card-title">今日专注</h2>
+                <strong class="grid-card-value tabular-nums" id="dashFocusValue">25:00</strong>
+                <p class="grid-card-meta" id="dashFocusMeta">番茄钟 · 尚未开始</p>
+              </div>
+            </article>
+
+            <article
+              class="ui-card grid-card dashboard-card is-clickable tone-purple"
+              id="dashPrivacyCard"
+              role="button"
+              tabindex="0"
+              aria-label="防窥模式"
+              aria-pressed="false"
+            >
+              <header class="grid-card-head">
+                <span class="grid-card-icon" aria-hidden="true">
+                  <svg class="icon"><use href="#i-eye-off"></use></svg>
+                </span>
+              </header>
+              <div class="grid-card-body">
+                <h2 class="grid-card-title">防窥模式</h2>
+                <strong class="grid-card-value" id="dashPrivacyValue">—</strong>
+                <p class="grid-card-meta" id="dashPrivacyMeta">正在读取防窥状态…</p>
+              </div>
+            </article>
+          </section>
+
+          <section class="ui-card dashboard-achievement-card" id="dashboardAchievementCard">
+            <div class="dashboard-achievement-main">
+              <span class="dashboard-achievement-icon tone-purple" aria-hidden="true">
+                <svg class="icon"><use href="#i-sparkles"></use></svg>
+              </span>
+              <div class="dashboard-achievement-copy">
+                <div class="dashboard-achievement-title-row">
+                  <h2>成就图鉴</h2>
+                  <span class="dashboard-achievement-count" id="dashboardAchievementCount">0 / 81</span>
+                </div>
+                <p id="dashboardAchievementMeta">已解锁 0 / 81 个成就 · 神秘成就 0 / 18</p>
+                <div class="dashboard-achievement-progress" aria-hidden="true">
+                  <span id="dashboardAchievementProgressBar"></span>
+                </div>
+              </div>
+            </div>
+            <button class="btn btn-ghost dashboard-achievement-link" id="openAchievementsPageButton" type="button">
+              查看全部 <span aria-hidden="true">›</span>
+            </button>
+          </section>
+
+          <section
+            class="ui-card dashboard-focus-chart"
+            id="dashboardFocusChart"
+            aria-labelledby="focusChartTitle"
+          >
+            <header class="focus-chart-head">
+              <div class="focus-chart-heading">
+                <span class="settings-icon tone-peach" aria-hidden="true">
+                  <svg class="icon"><use href="#i-chart"></use></svg>
+                </span>
+                <div class="focus-chart-heading-copy">
+                  <div class="focus-chart-title-row">
+                    <h2 id="focusChartTitle">专注数据</h2>
+                    <span class="focus-chart-period" id="focusChartPeriod">最近 7 天</span>
+                  </div>
+                  <p id="focusChartSubtitle">每天完成的番茄钟专注时长</p>
+                </div>
+              </div>
+              <div
+                class="segmented-control focus-chart-ranges"
+                id="focusChartRanges"
+                role="group"
+                aria-label="专注数据时间范围"
+              >
+                <button type="button" data-focus-chart-range="7" aria-pressed="true">7 天</button>
+                <button type="button" data-focus-chart-range="30" aria-pressed="false">1 个月</button>
+                <button type="button" data-focus-chart-range="182" aria-pressed="false">半年</button>
+              </div>
+            </header>
+
+            <div class="focus-chart-summary" aria-label="专注数据摘要">
+              <div class="focus-chart-stat">
+                <strong id="focusChartTotal">—</strong>
+                <span>分钟专注</span>
+              </div>
+              <div class="focus-chart-stat">
+                <strong id="focusChartSessions">—</strong>
+                <span>个番茄钟</span>
+              </div>
+              <div class="focus-chart-stat">
+                <strong id="focusChartAverage">—</strong>
+                <span>日均分钟</span>
+              </div>
+            </div>
+
+            <div class="focus-chart-body">
+              <div class="focus-chart-yaxis" id="focusChartYAxis" aria-hidden="true"></div>
+              <div class="focus-chart-plot" id="focusChartPlot">
+                <div class="focus-chart-gridlines" aria-hidden="true">
+                  <span></span><span></span><span></span><span></span>
+                </div>
+                <div
+                  class="focus-chart-bars"
+                  id="focusChartBars"
+                  role="group"
+                  aria-label="专注时长柱状图"
+                ></div>
+                <div class="focus-chart-tooltip" id="focusChartTooltip" hidden>
+                  <strong id="focusChartTooltipValue"></strong>
+                  <span id="focusChartTooltipMeta"></span>
+                </div>
+              </div>
+            </div>
+
+            <p class="focus-chart-empty" id="focusChartEmpty" hidden>
+              这段时间还没有完成的番茄钟。专注于一件事，记录会出现在这里。
+            </p>
+
+            <details class="focus-chart-table-wrap">
+              <summary>以表格查看</summary>
+              <div class="focus-chart-table" id="focusChartTable"></div>
+            </details>
+          </section>
+        </section>
+
+        <section class="page page-achievements" id="pageAchievements" aria-label="成就图鉴" hidden>
+          <nav class="detail-breadcrumb drilldown-breadcrumb achievements-breadcrumb" aria-label="面包屑">
+            <a class="breadcrumb-link" id="achievementsBackLink" href="#home">仪表盘</a>
+            <span class="breadcrumb-separator" aria-hidden="true">›</span>
+            <span class="breadcrumb-current" aria-current="page">成就图鉴</span>
+          </nav>
+
+          <section class="ui-card achievements-page">
+            <header class="achievements-page-head">
+              <div class="achievements-heading">
+                <span class="settings-icon tone-purple" aria-hidden="true"><svg class="icon"><use href="#i-sparkles"></use></svg></span>
+                <div>
+                  <h2 id="achievementsTitle">成就图鉴</h2>
+                  <p id="achievementsSummary">正在读取 81 个成就…</p>
+                </div>
+              </div>
+              <div class="achievements-hero-count">
+                <strong id="achievementsHeroValue">0</strong>
+                <span>/ 81</span>
+              </div>
+            </header>
+
+            <div class="achievements-toolbar">
+              <div class="segmented-control achievement-filters" id="achievementFilters" role="group" aria-label="成就难度筛选">
+                <button type="button" data-achievement-filter="all" aria-pressed="true">全部</button>
+                <button type="button" data-achievement-filter="1" aria-pressed="false">简单</button>
+                <button type="button" data-achievement-filter="2" aria-pressed="false">中等</button>
+                <button type="button" data-achievement-filter="3" aria-pressed="false">困难</button>
+                <button type="button" data-achievement-filter="4" aria-pressed="false">神秘</button>
+              </div>
+              <span class="achievements-filter-count" id="achievementFilterCount">0 / 81</span>
+            </div>
+            <div class="achievements-progress-track" aria-hidden="true">
+              <span id="achievementsProgressBar"></span>
+            </div>
+
+            <div class="achievements-body" id="achievementsGrid">
+              <p class="achievements-loading">正在读取成就…</p>
+            </div>
+
+            <footer class="achievements-page-footer">
+              <span class="achievements-footer-note" id="achievementsFooterNote">秘密成就达成前会隐藏真实名称。</span>
+            </footer>
+          </section>
+        </section>
+
+        <section class="page page-organize" id="pageOrganize" aria-label="桌面整理" hidden>
+          <article class="ui-card organize-hero tone-blue">
+            <div class="organize-hero-main">
+              <span class="organize-hero-icon" aria-hidden="true">
+                <svg class="icon"><use href="#i-scan"></use></svg>
+              </span>
+              <div class="organize-hero-copy">
+                <h2 class="organize-hero-title">扫描并整理桌面</h2>
+                <p class="organize-hero-desc">只登记分类归属，不移动、不复制、不改名。文件始终留在桌面原位，随时可以撤销。</p>
+              </div>
+            </div>
+            <div class="organize-hero-footer">
+              <button class="btn btn-primary organize-scan-button" id="scanButton" type="button">
+                <svg class="icon btn-icon" aria-hidden="true"><use href="#i-scan"></use></svg>
+                <span id="scanButtonLabel">扫描桌面</span>
+              </button>
+            </div>
+            <div class="organize-status" id="emptyState">
+              <span class="status-dot" aria-hidden="true"></span>
+              <div>
+                <strong id="emptyTitle">尚未扫描</strong>
+                <p id="emptyText">点击「扫描桌面」查看文件与归类预览。</p>
+              </div>
+            </div>
+          </article>
+
+          <div class="organize-actions">
+            <article class="ui-card organize-action tone-peach">
+              <header class="organize-action-head">
+                <span class="grid-card-icon" aria-hidden="true">
+                  <svg class="icon"><use href="#i-undo"></use></svg>
+                </span>
+                <h3>撤销操作</h3>
+              </header>
+              <p class="organize-action-desc">撤销上一次整理，或恢复最近一次手动分类调整。</p>
+              <div class="organize-action-buttons">
+                <button class="btn btn-ghost organize-action-button" id="undoButton" type="button" disabled>
+                  <svg class="icon btn-icon" aria-hidden="true"><use href="#i-undo"></use></svg>
+                  <span id="undoButtonLabel">撤销</span>
+                </button>
+                <button class="btn btn-ghost organize-action-button" id="manualUndoButton" type="button" disabled>
+                  <svg class="icon btn-icon" aria-hidden="true"><use href="#i-reset"></use></svg>
+                  <span id="manualUndoButtonLabel">撤销分类调整</span>
+                </button>
+              </div>
+            </article>
+
+            <article class="ui-card organize-action tone-purple">
+              <header class="organize-action-head">
+                <span class="grid-card-icon" aria-hidden="true">
+                  <svg class="icon"><use href="#i-clock"></use></svg>
+                </span>
+                <h3>历史记录</h3>
+              </header>
+              <p class="organize-action-desc">查看最近 10 次整理批次，并按时间回档到某次整理之前。</p>
+              <div class="organize-action-buttons">
+                <button class="btn btn-ghost organize-action-button" id="historyButton" type="button">
+                  <svg class="icon btn-icon" aria-hidden="true"><use href="#i-clock"></use></svg>
+                  <span>查看历史记录</span>
+                </button>
+              </div>
+            </article>
+          </div>
+
+          <section class="organize-recent-section" aria-labelledby="organizeRecentTitle">
+            <header class="section-head">
+              <h2 id="organizeRecentTitle">最近整理</h2>
+              <span class="section-meta" id="dashRecentCount">0</span>
+            </header>
+            <div class="ui-card list-group">
+              <ul class="list-rows dashboard-recent-list" id="dashRecentList">
+                <li class="dashboard-recent-empty">还没有整理记录</li>
+              </ul>
+            </div>
+          </section>
+        </section>
+
+        <section class="page page-personalize" id="pagePersonalize" aria-label="组件库" hidden>
+          <div class="personalize-overview" id="personalizeOverview">
+            <div class="component-library-toolbar">
+              <button
+                class="filter-chip"
+                id="filterDisabledComponents"
+                type="button"
+                aria-pressed="false"
+              >
+                <svg class="icon" aria-hidden="true"><use href="#i-eye"></use></svg>
+                <span>仅看未开启</span>
+              </button>
+            </div>
+            <div class="personalize-grid" id="personalizeCardList"></div>
+            <p class="component-filter-empty" id="componentFilterEmpty" hidden>
+              所有组件都已开启。
+            </p>
+          </div>
+
+          <div class="personalize-detail" id="personalizeDetail" hidden>
+            <nav class="detail-breadcrumb drilldown-breadcrumb" aria-label="面包屑">
+              <a class="breadcrumb-link" id="personalizeBack" href="#personalizeOverview">组件库</a>
+              <span class="breadcrumb-separator" aria-hidden="true">›</span>
+              <span class="breadcrumb-current" id="personalizeDetailTitle" aria-current="page">组件</span>
+            </nav>
+            <div id="personalizeDetailContent"></div>
+          </div>
+        </section>
+
+        <section class="page page-widgets page-global-settings" id="pageWidgets" aria-label="全局设置" hidden>
+          <div class="settings-drilldown" id="globalOverview">
+            <div class="settings-category-grid">
+              <a class="ui-card settings-category-card tone-blue" href="#globalPanelAppearance">
+                <span class="settings-category-icon" aria-hidden="true">
+                  <svg class="icon"><use href="#i-palette"></use></svg>
+                </span>
+                <span class="settings-category-arrow" aria-hidden="true">
+                  <svg class="icon"><use href="#i-arrow-up-right"></use></svg>
+                </span>
+                <h3>全局颜色与质感</h3>
+                <p>调整磨砂材质与整体色调，决定界面和桌面组件的通透度。</p>
+              </a>
+
+              <a class="ui-card settings-category-card tone-purple" href="#globalPanelRhythm">
+                <span class="settings-category-icon" aria-hidden="true">
+                  <svg class="icon"><use href="#i-sparkles"></use></svg>
+                </span>
+                <span class="settings-category-arrow" aria-hidden="true">
+                  <svg class="icon"><use href="#i-arrow-up-right"></use></svg>
+                </span>
+                <h3>智能节律主题</h3>
+                <p>根据时间、节气与节日自动切换点缀色，完全离线计算。</p>
+              </a>
+
+              <a class="ui-card settings-category-card tone-yellow" href="#globalPanelDesktop">
+                <span class="settings-category-icon" aria-hidden="true">
+                  <svg class="icon"><use href="#i-layout"></use></svg>
+                </span>
+                <span class="settings-category-arrow" aria-hidden="true">
+                  <svg class="icon"><use href="#i-arrow-up-right"></use></svg>
+                </span>
+                <h3>桌面层与主界面背景</h3>
+                <p>控制桌面组件的显示与展开方式，以及主界面的背景样式。</p>
+              </a>
+
+            </div>
+          </div>
+
+          <section class="settings-subpage" id="globalPanelAppearance" aria-label="全局颜色与质感">
+            <nav class="detail-breadcrumb drilldown-breadcrumb" aria-label="面包屑">
+              <a class="breadcrumb-link" href="#globalOverview">全局设置</a>
+              <span class="breadcrumb-separator" aria-hidden="true">›</span>
+              <span class="breadcrumb-current" aria-current="page">全局颜色与质感</span>
+            </nav>
+            <section class="ui-card list-group settings-group tone-blue" id="widgetsAppearance">
+              <div class="settings-row">
+                <span class="settings-icon tone-blue" aria-hidden="true"><svg class="icon"><use href="#i-palette"></use></svg></span>
+                <div class="settings-copy">
+                  <h4>全局颜色</h4>
+                  <p>磨砂层上的色调</p>
+                </div>
+                <div class="tint-options" id="tintOptions">
+                  <button type="button" data-tint="transparent">透明</button>
+                  <button type="button" data-tint="white">白色</button>
+                  <button type="button" data-tint="black">黑色</button>
+                  <button type="button" data-tint="system">跟随系统</button>
+                  <button type="button" data-tint="custom">自定义</button>
+                </div>
+              </div>
+
+              <div class="settings-row">
+                <span class="settings-icon tone-yellow" aria-hidden="true"><svg class="icon"><use href="#i-palette"></use></svg></span>
+                <div class="settings-copy">
+                  <h4>自定义颜色</h4>
+                  <p>选择一种低饱和度色板。</p>
+                </div>
+                <div class="tint-palette" id="tintPalette" aria-label="自定义颜色"></div>
+              </div>
+
+              <div class="settings-row">
+                <span class="settings-icon tone-purple" aria-hidden="true"><svg class="icon"><use href="#i-blur"></use></svg></span>
+                <div class="settings-copy">
+                  <h4>磨砂效果</h4>
+                  <p id="frostModeNote">当前方式：—</p>
+                </div>
+                <button
+                  class="switch"
+                  id="toggleFrostButton"
+                  type="button"
+                  role="switch"
+                  aria-checked="false"
+                  aria-label="磨砂效果"
+                ><span class="switch-thumb"></span></button>
+              </div>
+
+              <div class="settings-row">
+                <span class="settings-icon tone-yellow" aria-hidden="true"><svg class="icon"><use href="#i-sun"></use></svg></span>
+                <div class="settings-copy">
+                  <h4>跟随壁纸亮度</h4>
+                  <p>根据 Windows 当前壁纸自动切换明暗界面。</p>
+                </div>
+                <button
+                  class="switch"
+                  id="toggleWallpaperBrightnessButton"
+                  type="button"
+                  role="switch"
+                  aria-checked="false"
+                  aria-label="跟随壁纸亮度"
+                ><span class="switch-thumb"></span></button>
+              </div>
+
+              <div class="settings-row">
+                <span class="settings-icon tone-green" aria-hidden="true"><svg class="icon"><use href="#i-leaf"></use></svg></span>
+                <div class="settings-copy">
+                  <h4>性能保护模式</h4>
+                  <p>减少模糊、阴影、视差与动画开销，默认关闭。</p>
+                </div>
+                <button
+                  class="switch"
+                  id="togglePerformanceModeButton"
+                  type="button"
+                  role="switch"
+                  aria-checked="false"
+                  aria-label="性能保护模式"
+                ><span class="switch-thumb"></span></button>
+              </div>
+
+              <div class="settings-row">
+                <span class="settings-icon tone-blue" aria-hidden="true"><svg class="icon"><use href="#i-layout"></use></svg></span>
+                <div class="settings-copy">
+                  <h4>3D 景深</h4>
+                  <p>按住 Ctrl 滚动鼠标滚轮把组件推远；点击失焦组件即可飞回眼前。</p>
+                </div>
+                <button
+                  class="switch"
+                  id="toggleDepth3dButton"
+                  type="button"
+                  role="switch"
+                  aria-checked="false"
+                  aria-label="3D 景深"
+                ><span class="switch-thumb"></span></button>
+              </div>
+
+              <div class="settings-row">
+                <span class="settings-icon tone-purple" aria-hidden="true"><svg class="icon"><use href="#i-music"></use></svg></span>
+                <div class="settings-copy">
+                  <h4>音乐封面背景</h4>
+                  <p>播放时只在音乐组件卡片内显示虚化的专辑封面；暂停或没有封面时自动恢复。</p>
+                </div>
+                <button
+                  class="switch"
+                  id="toggleMusicVisualizerButton"
+                  type="button"
+                  role="switch"
+                  aria-checked="true"
+                  aria-label="音乐封面背景"
+                ><span class="switch-thumb"></span></button>
+              </div>
+
+              <p class="settings-note" id="tintLockedNote" hidden>
+                当前由智能节律主题接管，关闭后可手动选择颜色。
+              </p>
+            </section>
+          </section>
+
+          <section class="settings-subpage" id="globalPanelRhythm" aria-label="智能节律主题">
+            <nav class="detail-breadcrumb drilldown-breadcrumb" aria-label="面包屑">
+              <a class="breadcrumb-link" href="#globalOverview">全局设置</a>
+              <span class="breadcrumb-separator" aria-hidden="true">›</span>
+              <span class="breadcrumb-current" aria-current="page">智能节律主题</span>
+            </nav>
+            <section class="ui-card list-group settings-group tone-purple" id="globalSmartTheme">
+              <div class="settings-block smart-theme-block">
+                <div class="settings-block-head">
+                  <span class="settings-icon tone-purple" aria-hidden="true"><svg class="icon"><use href="#i-sparkles"></use></svg></span>
+                  <div class="settings-copy">
+                    <h4>智能节律主题</h4>
+                    <p>根据时间和本地节日、二十四节气自动切换点缀色。完全离线计算，不需要外部 API。</p>
+                  </div>
+                  <button
+                    class="switch"
+                    id="toggleSmartThemeButton"
+                    type="button"
+                    role="switch"
+                    aria-checked="false"
+                    aria-label="智能节律主题"
+                  ><span class="switch-thumb"></span></button>
+                </div>
+
+                <div class="smart-theme-panel" id="smartThemePanel">
+                  <div class="smart-theme-preview">
+                    <span class="smart-theme-swatch" id="smartThemeSwatch" aria-hidden="true"></span>
+                    <div class="smart-theme-preview-copy">
+                      <strong id="smartThemeTitle">—</strong>
+                      <span id="smartThemeDetail">—</span>
+                    </div>
+                  </div>
+
+                  <div class="smart-theme-option">
+                    <div class="smart-theme-option-copy">
+                      <strong>时间节律</strong>
+                      <span>早晨绿 · 午后橙 · 夜间紫</span>
+                    </div>
+                    <button
+                      class="switch"
+                      id="toggleSmartTimeButton"
+                      type="button"
+                      role="switch"
+                      aria-checked="true"
+                      aria-label="时间节律"
+                    ><span class="switch-thumb"></span></button>
+                  </div>
+
+                  <div class="smart-theme-option">
+                    <div class="smart-theme-option-copy">
+                      <strong>节气与节日氛围</strong>
+                      <span>二十四节气 + 中国法定节假日</span>
+                    </div>
+                    <button
+                      class="switch"
+                      id="toggleSmartSeasonButton"
+                      type="button"
+                      role="switch"
+                      aria-checked="true"
+                      aria-label="节气与节日氛围"
+                    ><span class="switch-thumb"></span></button>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </section>
+
+          <section class="settings-subpage" id="globalPanelDesktop" aria-label="桌面层与主界面背景">
+            <nav class="detail-breadcrumb drilldown-breadcrumb" aria-label="面包屑">
+              <a class="breadcrumb-link" href="#globalOverview">全局设置</a>
+              <span class="breadcrumb-separator" aria-hidden="true">›</span>
+              <span class="breadcrumb-current" aria-current="page">桌面层与主界面背景</span>
+            </nav>
+            <section class="ui-card list-group settings-group tone-teal" id="globalDesktop">
+              <div class="settings-row global-visible-row">
+                <span class="settings-icon tone-teal" aria-hidden="true"><svg class="icon"><use href="#i-eye"></use></svg></span>
+                <div class="settings-copy">
+                  <h4>所有桌面组件</h4>
+                  <p id="floatingVisibleSummary">当前 0 个可见</p>
+                </div>
+                <button
+                  class="switch"
+                  id="toggleAllFloatingButton"
+                  type="button"
+                  role="switch"
+                  aria-checked="false"
+                  aria-label="显示或隐藏所有桌面组件"
+                ><span class="switch-thumb"></span></button>
+              </div>
+
+              <div class="settings-row">
+                <span class="settings-icon tone-blue" aria-hidden="true"><svg class="icon"><use href="#i-chevron-down"></use></svg></span>
+                <div class="settings-copy">
+                  <h4>分类展开方式</h4>
+                  <p>选择展开或收起文件分类卡片的触发方式。</p>
+                </div>
+                <div class="layout-controls" id="collapseModeHost"></div>
+              </div>
+
+            </section>
+
+            <section class="ui-card list-group settings-group tone-yellow" id="globalBackground">
+              <div class="settings-row">
+                <span class="settings-icon tone-yellow" aria-hidden="true"><svg class="icon"><use href="#i-image"></use></svg></span>
+                <div class="settings-copy">
+                  <h4>背景样式</h4>
+                  <p>使用纯色、淡雅渐变或本地图片作为主界面背景。</p>
+                </div>
+                <div class="segmented-control" id="uiBackgroundTypes" role="group" aria-label="主界面背景样式">
+                  <button type="button" data-ui-bg-type="solid">纯色</button>
+                  <button type="button" data-ui-bg-type="gradient">渐变</button>
+                  <button type="button" data-ui-bg-type="image">图片</button>
+                </div>
+              </div>
+              <p class="setting-inline-note" id="uiBackgroundLockedNote" hidden>
+                开启节律主题后，主界面背景将自动接管
+              </p>
+
+              <div class="settings-block ui-background-block">
+                <div class="ui-background-row" id="uiBgSolidRow">
+                  <label class="ui-color-field">
+                    <span>背景颜色</span>
+                    <input type="color" id="uiBgSolidColor" value="#f2f4ef">
+                  </label>
+                  <span class="ui-color-value" id="uiBgSolidValue">#f2f4ef</span>
+                </div>
+
+                <div class="ui-background-row" id="uiBgGradientRow">
+                  <label class="ui-color-field">
+                    <span>起始色</span>
+                    <input type="color" id="uiBgGradientStart" value="#edf4ee">
+                  </label>
+                  <label class="ui-color-field">
+                    <span>结束色</span>
+                    <input type="color" id="uiBgGradientEnd" value="#e4edf6">
+                  </label>
+                  <div class="ui-gradient-presets" id="uiBgGradientPresets" aria-label="渐变预设">
+                    <button type="button" data-ui-gradient="#edf4ee:#e4edf6">薄荷</button>
+                    <button type="button" data-ui-gradient="#f5efe3:#f7ebe6">暖沙</button>
+                    <button type="button" data-ui-gradient="#eef2f7:#e6ecf5">雾蓝</button>
+                    <button type="button" data-ui-gradient="#f3eef8:#eae4f2">暮紫</button>
+                  </div>
+                </div>
+
+                <div class="ui-background-row ui-background-image-row" id="uiBgImageRow">
+                  <div class="ui-background-preview" id="uiBgPreview" aria-hidden="true"></div>
+                  <div class="ui-background-image-copy">
+                    <strong id="uiBgImageName">未选择图片</strong>
+                    <span>支持 PNG / JPG / WEBP / BMP，图片只保存在本机路径。</span>
+                  </div>
+                  <div class="settings-item-actions">
+                    <button class="btn btn-ghost settings-action" id="uiBgPickButton" type="button">选择图片</button>
+                    <button class="btn btn-ghost settings-action" id="uiBgClearButton" type="button">清除图片</button>
+                  </div>
+                </div>
+              </div>
+
+            </section>
+          </section>
+
+        </section>
+
+        <section class="page page-settings" id="pageSettings" aria-label="设置" hidden>
+          <section class="ui-card list-group settings-group tone-blue" id="settingsLanguage">
+            <div class="settings-row">
+              <span class="settings-icon tone-blue" aria-hidden="true"><svg class="icon"><use href="#i-globe"></use></svg></span>
+              <div class="settings-copy">
+                <h4>界面语言</h4>
+                <p>切换后立即应用，并记住你的选择。</p>
+              </div>
+              <label class="settings-select">
+                <select id="languageSelect" aria-label="界面语言">
+                  <option value="system">跟随系统 (Follow System)</option>
+                  <option value="zh-CN">简体中文</option>
+                  <option value="zh-TW">繁體中文</option>
+                  <option value="en">English</option>
+                  <option value="ja">日本語</option>
+                  <option value="fr">Français</option>
+                  <option value="ru">Русский</option>
+                </select>
+              </label>
+            </div>
+          </section>
+
+          <section class="ui-card list-group settings-group tone-yellow" id="settingsPaths">
+            <details class="settings-accordion settings-block">
+              <summary class="settings-accordion-summary">
+                <span class="settings-icon tone-yellow" aria-hidden="true"><svg class="icon"><use href="#i-folder"></use></svg></span>
+                <span class="settings-accordion-copy">
+                  <span class="settings-accordion-title">文件夹路径</span>
+                  <span class="settings-accordion-sub">应用数据与随手记 · 4 个位置</span>
+                </span>
+                <span class="settings-accordion-chevron" aria-hidden="true">
+                  <svg class="icon"><use href="#i-chevron-down"></use></svg>
+                </span>
+              </summary>
+              <div class="settings-accordion-body">
+                <div class="path-list">
+                  <div class="path-row">
+                    <span class="settings-icon tone-yellow" aria-hidden="true"><svg class="icon"><use href="#i-folder"></use></svg></span>
+                    <div class="path-copy">
+                      <span class="path-title">应用文件夹路径</span>
+                      <code class="path-value" id="appFolderPath">正在读取…</code>
+                    </div>
+                    <button class="btn btn-ghost path-open-btn" type="button" data-open-path="userData">
+                      打开文件夹
+                    </button>
+                  </div>
+                  <div class="path-row">
+                    <span class="settings-icon tone-blue" aria-hidden="true"><svg class="icon"><use href="#i-window"></use></svg></span>
+                    <div class="path-copy">
+                      <span class="path-title">应用程序目录</span>
+                      <code class="path-value" id="appProgramPath">正在读取…</code>
+                    </div>
+                    <button class="btn btn-ghost path-open-btn" type="button" data-open-path="appPath">
+                      打开文件夹
+                    </button>
+                  </div>
+                  <div class="path-row">
+                    <span class="settings-icon tone-peach" aria-hidden="true"><svg class="icon"><use href="#i-note"></use></svg></span>
+                    <div class="path-copy">
+                      <span class="path-title">随手记保存路径</span>
+                      <code class="path-value" id="notesFolderPath">正在读取…</code>
+                    </div>
+                    <button class="btn btn-ghost path-open-btn" type="button" data-open-path="notes">
+                      打开文件夹
+                    </button>
+                  </div>
+                  <div class="path-row">
+                    <span class="settings-icon tone-purple" aria-hidden="true"><svg class="icon"><use href="#i-layout"></use></svg></span>
+                    <div class="path-copy">
+                      <span class="path-title">桌面路径</span>
+                      <code class="path-value" id="desktopFolderPath">正在读取…</code>
+                    </div>
+                    <button class="btn btn-ghost path-open-btn" type="button" data-open-path="desktop">
+                      打开文件夹
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </details>
+          </section>
+
+          <section class="ui-card list-group settings-group tone-blue" id="settingsDesktopLayout">
+            <div class="settings-row">
+              <span class="settings-icon tone-blue" aria-hidden="true"><svg class="icon"><use href="#i-window"></use></svg></span>
+              <div class="settings-copy">
+                <h4>重置桌面布局</h4>
+                <p>把所有组件恢复到默认位置与大小，并重新显示隐藏的分类。</p>
+              </div>
+              <button class="btn btn-ghost settings-action" id="resetDesktopLayoutButton" type="button">
+                重置布局
+              </button>
+            </div>
+          </section>
+
+          <section class="ui-card list-group settings-group tone-purple" id="settingsSharing">
+            <div class="settings-row">
+              <span class="settings-icon tone-blue" aria-hidden="true"><svg class="icon"><use href="#i-archive"></use></svg></span>
+              <div class="settings-copy">
+                <h4>导出桌面布局</h4>
+                <p>把组件位置、尺寸与主题打包成可分享的 .zc 文件。</p>
+              </div>
+              <button class="btn btn-ghost settings-action" id="exportLayoutButton" type="button">
+                导出 .zc
+              </button>
+            </div>
+            <div class="settings-row">
+              <span class="settings-icon tone-green" aria-hidden="true"><svg class="icon"><use href="#i-inbox"></use></svg></span>
+              <div class="settings-copy">
+                <h4>导入桌面布局</h4>
+                <p>读取 .zc 布局包，不会修改桌面文件与归属记录。</p>
+              </div>
+              <button class="btn btn-ghost settings-action" id="importLayoutButton" type="button">
+                导入布局
+              </button>
+            </div>
+            <div class="settings-row">
+              <span class="settings-icon tone-purple" aria-hidden="true"><svg class="icon"><use href="#i-image"></use></svg></span>
+              <div class="settings-copy">
+                <h4>第三方图标包</h4>
+                <p>选择包含 manifest.json 或按类型命名 SVG/PNG 的文件夹。</p>
+              </div>
+              <button class="btn btn-ghost settings-action" id="importIconPackButton" type="button">
+                导入图标包
+              </button>
+            </div>
+          </section>
+
+          <section class="ui-card list-group settings-group tone-purple" id="settingsAchievements">
+            <div
+              class="settings-row settings-row-button"
+              id="openAchievementsButton"
+              role="button"
+              tabindex="0"
+            >
+              <span class="settings-icon tone-purple" aria-hidden="true"><svg class="icon"><use href="#i-sparkles"></use></svg></span>
+              <div class="settings-copy">
+                <h4>成就图鉴</h4>
+                <p id="achievementsProgressText">正在读取成就进度…</p>
+              </div>
+              <span class="settings-row-chevron" aria-hidden="true"><svg class="icon"><use href="#i-chevron-right"></use></svg></span>
+            </div>
+          </section>
+
+          <section class="ui-card list-group settings-group tone-blue" id="settingsShortcuts">
+            <div
+              class="settings-row settings-row-button"
+              id="openShortcutsButton"
+              role="button"
+              tabindex="0"
+            >
+              <span class="settings-icon tone-blue" aria-hidden="true"><svg class="icon"><use href="#i-keyboard"></use></svg></span>
+              <div class="settings-copy">
+                <h4>全局快捷键</h4>
+                <p id="shortcutSummaryText">在任何窗口下都能触发。点击进入管理。</p>
+              </div>
+              <span class="settings-row-chevron" aria-hidden="true"><svg class="icon"><use href="#i-chevron-right"></use></svg></span>
+            </div>
+          </section>
+
+          <section class="ui-card list-group settings-group tone-teal" id="settingsMusicAdapter">
+            <div
+              class="settings-row settings-row-button"
+              id="neteaseAdapterButton"
+              role="button"
+              tabindex="0"
+              aria-haspopup="dialog"
+            >
+              <span class="settings-icon tone-teal" aria-hidden="true"><svg class="icon"><use href="#i-music"></use></svg></span>
+              <div class="settings-copy">
+                <h4>网易云音乐适配</h4>
+                <p>让网易云的歌名、进度与播放控制出现在 Windows 媒体会话中。</p>
+              </div>
+              <span class="settings-row-chevron" aria-hidden="true">
+                <svg class="icon"><use href="#i-chevron-right"></use></svg>
+              </span>
+            </div>
+          </section>
+
+          <section class="ui-card list-group settings-group tone-yellow" id="settingsAppData">
+            <div class="settings-row">
+              <span class="settings-icon tone-yellow" aria-hidden="true"><svg class="icon"><use href="#i-info"></use></svg></span>
+              <div class="settings-copy">
+                <h4>新手引导</h4>
+                <p>回到桌面，用聚光灯重新认识悬停收纳、标签合并、时间胶囊与专注模式。</p>
+              </div>
+              <button class="btn btn-ghost settings-action" id="replayOnboardingButton" type="button">
+                重新观看新手引导
+              </button>
+            </div>
+            <div class="settings-row">
+              <span class="settings-icon tone-pink" aria-hidden="true"><svg class="icon"><use href="#i-reset"></use></svg></span>
+              <div class="settings-copy">
+                <h4>重置所有数据</h4>
+                <p>清空布局、归属、随手记、历史与设置，并重启应用。</p>
+              </div>
+              <button class="btn btn-ghost settings-action is-danger" id="resetAllDataButton" type="button">
+                重置并重启
+              </button>
+            </div>
+          </section>
+
+          <section class="ui-card list-group settings-group tone-teal" id="settingsClipboard">
+            <div class="settings-row">
+              <span class="settings-icon tone-teal" aria-hidden="true"><svg class="icon"><use href="#i-note"></use></svg></span>
+              <div class="settings-copy">
+                <h4>立即用剪贴板生成随手记</h4>
+                <p>读取当前剪贴板中的文字，直接保存为一条随手记。</p>
+              </div>
+              <button class="btn btn-ghost settings-action" id="clipboardNoteButton" type="button">
+                立即生成
+              </button>
+            </div>
+
+            <div class="settings-row">
+              <span class="settings-icon tone-purple" aria-hidden="true"><svg class="icon"><use href="#i-window"></use></svg></span>
+              <div class="settings-copy">
+                <h4>桌面右键菜单</h4>
+                <p id="shellIntegrationNote">在桌面或文件夹空白处右键，显示「将剪贴板内容生成为随手记卡片」。</p>
+              </div>
+              <button
+                class="switch"
+                id="toggleShellIntegrationButton"
+                type="button"
+                role="switch"
+                aria-checked="false"
+                aria-label="桌面右键菜单"
+              ><span class="switch-thumb"></span></button>
+            </div>
+          </section>
+        </section>
+
+        <section class="page page-shortcuts" id="pageShortcuts" aria-label="全局快捷键" hidden>
+          <nav class="detail-breadcrumb drilldown-breadcrumb" aria-label="面包屑">
+            <a class="breadcrumb-link" id="shortcutsBackLink" href="#settings">设置</a>
+            <span class="breadcrumb-separator" aria-hidden="true">›</span>
+            <span class="breadcrumb-current" aria-current="page">全局快捷键</span>
+          </nav>
+
+          <section class="ui-card list-group settings-group tone-blue">
+            <div class="settings-block shortcut-settings-block">
+              <div class="settings-block-head">
+                <span class="settings-icon tone-blue" aria-hidden="true"><svg class="icon"><use href="#i-keyboard"></use></svg></span>
+                <div class="settings-copy">
+                  <h4>按键组合</h4>
+                  <p>在任何窗口下都能触发。点击按键直接录制新的组合。</p>
+                </div>
+                <button class="btn btn-ghost settings-action" id="resetShortcutsButton" type="button">恢复默认</button>
+              </div>
+              <div class="shortcut-list" id="shortcutList">
+                <p class="shortcut-empty">正在读取快捷键…</p>
+              </div>
+              <p class="settings-note shortcut-recording-note" id="shortcutRecordingNote" hidden>
+                正在录制：按下包含 Ctrl、Alt、Shift 或 Win 的组合键；Esc 取消。
+              </p>
+            </div>
+          </section>
+        </section>
+
+        <section class="page page-about" id="pageAbout" aria-label="关于" hidden>
+          <div class="about-overview" id="aboutOverview">
+            <section class="ui-card about-hero-card">
+              <div class="about-hero-logo" aria-hidden="true">
+                <svg class="icon"><use href="#i-widgets"></use></svg>
+              </div>
+              <div class="about-hero-copy">
+                <span class="about-hero-kicker">WITHIN CUBES</span>
+                <h2>方寸格</h2>
+                <p>把桌面整理成清晰、安静、随时可用的方寸之地。</p>
+                <span class="about-version-pill" id="aboutVersion">v0.3.0</span>
+                <span class="about-i18n-note">当前版本支持静态多语言，部分动态数据展示仍为中文。</span>
+              </div>
+            </section>
+
+            <div class="about-entry-grid" aria-label="关于分类">
+              <button class="ui-card grid-card about-entry-card tone-blue" type="button" data-about-panel="features">
+                <span class="grid-card-icon" aria-hidden="true"><svg class="icon"><use href="#i-sparkles"></use></svg></span>
+                <span class="about-entry-copy">
+                  <span class="about-entry-title">核心特性</span>
+                  <span class="about-entry-desc">文件不移动，分类、组件和专注都在桌面原位完成。</span>
+                </span>
+                <span class="about-entry-arrow" aria-hidden="true">›</span>
+              </button>
+              <button class="ui-card grid-card about-entry-card tone-purple" type="button" data-about-panel="version">
+                <span class="grid-card-icon" aria-hidden="true"><svg class="icon"><use href="#i-info"></use></svg></span>
+                <span class="about-entry-copy">
+                  <span class="about-entry-title">版本与更新</span>
+                  <span class="about-entry-desc">查看当前版本、运行环境和可用更新。</span>
+                </span>
+                <span class="about-entry-arrow" aria-hidden="true">›</span>
+              </button>
+              <button class="ui-card grid-card about-entry-card tone-green" type="button" data-about-panel="credits">
+                <span class="grid-card-icon" aria-hidden="true"><svg class="icon"><use href="#i-document"></use></svg></span>
+                <span class="about-entry-copy">
+                  <span class="about-entry-title">开源与致谢</span>
+                  <span class="about-entry-desc">Electron、Node.js、Lucide 与社区开源项目。</span>
+                </span>
+                <span class="about-entry-arrow" aria-hidden="true">›</span>
+              </button>
+              <button class="ui-card grid-card about-entry-card tone-peach" type="button" data-about-panel="community">
+                <span class="grid-card-icon" aria-hidden="true"><svg class="icon"><use href="#i-inbox"></use></svg></span>
+                <span class="about-entry-copy">
+                  <span class="about-entry-title">反馈与社区</span>
+                  <span class="about-entry-desc">提交问题、查看更新动态，和方寸格一起成长。</span>
+                </span>
+                <span class="about-entry-arrow" aria-hidden="true">›</span>
+              </button>
+            </div>
+
+            <button class="ui-card about-donate-card" id="aboutDonateCard" type="button" aria-haspopup="dialog">
+              <span class="about-donate-icon" aria-hidden="true">☕</span>
+              <span class="about-donate-copy">
+                <span class="about-donate-title">赞赏与支持</span>
+                <span class="about-donate-desc">方寸格完全免费开源，您的支持是我更新的最大动力。</span>
+              </span>
+              <span class="about-donate-arrow" aria-hidden="true">›</span>
+            </button>
+          </div>
+
+          <div class="about-detail" id="aboutDetail" hidden>
+            <nav class="detail-breadcrumb drilldown-breadcrumb" aria-label="面包屑">
+              <a class="breadcrumb-link" id="aboutBackLink" href="#aboutOverview">关于</a>
+              <span class="breadcrumb-separator" aria-hidden="true">›</span>
+              <span class="breadcrumb-current" id="aboutBreadcrumbCurrent" aria-current="page">核心特性</span>
+            </nav>
+
+            <section class="about-features" id="aboutFeatures" aria-label="核心特性" hidden>
+              <article class="ui-card about-feature-hero tone-blue">
+                <span class="about-feature-icon" aria-hidden="true">
+                  <svg class="icon"><use href="#i-magic-hat"></use></svg>
+                </span>
+                <div class="about-feature-hero-copy">
+                  <h2 class="about-feature-hero-title">隐于壁纸，不越雷池一步</h2>
+                  <p>Win32 桌面底层接管，按 Win+D 绝不消失。我们绝不移动你的实体文件，只在方寸之间，为你搭建最优雅的数字展示柜。</p>
+                </div>
+              </article>
+
+              <div class="about-feature-row">
+                <article class="ui-card about-feature-card tone-purple">
+                  <span class="about-feature-icon" aria-hidden="true">
+                    <svg class="icon"><use href="#i-wand"></use></svg>
+                  </span>
+                  <h3>打破物理边界</h3>
+                  <p>3D 景深沙盘与标签页折叠的次元魔法。文件跨界流转，随心而动。</p>
+                </article>
+
+                <article class="ui-card about-feature-card tone-green">
+                  <span class="about-feature-icon" aria-hidden="true">
+                    <svg class="icon"><use href="#i-leaf"></use></svg>
+                  </span>
+                  <h3>会呼吸的自留地</h3>
+                  <p>二十四节气流转，音乐封面律动背景。让数字桌面拥有四季的体温。</p>
+                </article>
+
+                <article class="ui-card about-feature-card tone-yellow">
+                  <span class="about-feature-icon" aria-hidden="true">
+                    <svg class="icon"><use href="#i-trophy"></use></svg>
+                  </span>
+                  <h3>极客的数字浪漫</h3>
+                  <p>81 个隐秘成就等你点亮。纯净开源，不耍流氓，数据永远属于你。</p>
+                </article>
+              </div>
+            </section>
+
+            <section
+              class="ui-card list-group settings-group about-detail-list"
+              id="aboutDetailList"
+              aria-label="关于详情"
+            ></section>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="scanModal" hidden>
+    <section class="modal-panel scan-modal-panel" role="dialog" aria-modal="true" aria-labelledby="scanModalTitle">
+      <header class="modal-head">
+        <div>
+          <h2 id="scanModalTitle">扫描结果</h2>
+          <p id="scanModalMeta">正在读取桌面文件…</p>
+        </div>
+        <button class="icon-btn" id="scanModalClose" type="button" aria-label="关闭扫描结果">×</button>
+      </header>
+      <div class="scan-file-list" id="scanModalList"></div>
+      <p class="scan-modal-note" id="scanModalNote" hidden></p>
+      <footer class="modal-actions">
+        <button class="btn btn-ghost" id="scanCancelButton" type="button">取消</button>
+        <button class="btn btn-primary" id="scanConfirmButton" type="button">确认整理</button>
+      </footer>
+    </section>
+  </div>
+
+  <div class="modal-backdrop" id="noteEditorModal" hidden>
+    <section class="modal-panel note-editor-panel" role="dialog" aria-modal="true" aria-labelledby="noteEditorTitle">
+      <header class="modal-head">
+        <div>
+          <h2 id="noteEditorTitle">编辑随手记</h2>
+          <p>保存后会覆盖原记录，列表顺序不变。</p>
+        </div>
+        <button class="icon-btn" id="noteEditorClose" type="button" aria-label="关闭随手记编辑器">×</button>
+      </header>
+      <div class="note-editor-body">
+        <label class="note-editor-field">
+          <span>标题</span>
+          <input id="noteEditorTitleInput" type="text" maxlength="60" autocomplete="off">
+        </label>
+        <label class="note-editor-field">
+          <span>内容</span>
+          <textarea id="noteEditorBodyInput" rows="12"></textarea>
+        </label>
+      </div>
+      <footer class="modal-actions">
+        <button class="btn btn-ghost" id="noteEditorCancel" type="button">取消</button>
+        <button class="btn btn-primary" id="noteEditorSave" type="button">保存修改</button>
+      </footer>
+    </section>
+  </div>
+
+  <div class="modal-backdrop" id="noteReaderModal" hidden>
+    <section
+      class="modal-panel note-reader-panel"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="noteReaderTitle"
+    >
+      <header class="modal-head">
+        <div class="note-reader-heading">
+          <span class="settings-icon tone-yellow" aria-hidden="true">
+            <svg class="icon"><use href="#i-note"></use></svg>
+          </span>
+          <div>
+            <h2 id="noteReaderTitle">随手记</h2>
+            <p id="noteReaderMeta">保存时间</p>
+          </div>
+        </div>
+        <button class="icon-btn" id="noteReaderClose" type="button" aria-label="关闭随手记阅读">×</button>
+      </header>
+      <div class="note-reader-body">
+        <pre class="note-reader-content" id="noteReaderContent"></pre>
+      </div>
+      <footer class="modal-actions note-reader-actions">
+        <button class="btn btn-ghost note-reader-copy" id="noteReaderCopy" type="button">📋 复制全文</button>
+        <div class="note-reader-action-group">
+          <button class="btn btn-ghost" id="noteReaderEdit" type="button">编辑内容</button>
+          <button class="btn btn-primary" id="noteReaderDone" type="button">关闭</button>
+        </div>
+      </footer>
+    </section>
+  </div>
+
+  <div class="modal-backdrop" id="donateModal" hidden>
+    <section class="modal-panel donate-panel" role="dialog" aria-modal="true" aria-labelledby="donateTitle">
+      <header class="modal-head">
+        <div>
+          <h2 id="donateTitle">赞赏与支持</h2>
+          <p>方寸格完全免费开源，您的支持是我更新的最大动力。</p>
+        </div>
+        <button class="icon-btn" id="closeDonateButton" type="button" aria-label="关闭赞赏弹窗">×</button>
+      </header>
+
+      <div class="donate-body">
+        <div class="donate-qr-row">
+          <figure class="donate-qr">
+            <img
+              class="donate-qr-image"
+              id="wechatDonateImage"
+              src="assets/donate-wechat.png"
+              alt="微信赞赏码"
+              width="200"
+              height="200"
+            >
+            <figcaption>微信赞赏</figcaption>
+          </figure>
+          <figure class="donate-qr">
+            <img
+              class="donate-qr-image"
+              id="alipayDonateImage"
+              src="assets/donate-alipay.png"
+              alt="支付宝赞赏码"
+              width="200"
+              height="200"
+            >
+            <figcaption>支付宝赞赏</figcaption>
+          </figure>
+        </div>
+
+        <div class="donate-link-row">
+          <button class="btn btn-ghost donate-link-btn" id="donateAfdianButton" type="button">爱发电</button>
+          <button class="btn btn-ghost donate-link-btn" id="donateGithubButton" type="button">GitHub Sponsors</button>
+          <button class="btn btn-ghost donate-link-btn" id="donateBilibiliButton" type="button">关注B站</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="modal-backdrop" id="historyModal" hidden>
+    <section class="history-panel modal-panel" role="dialog" aria-modal="true" aria-labelledby="historyTitle">
+      <header class="history-head">
+        <div>
+          <h2 id="historyTitle">历史记录</h2>
+          <p>按时间倒序排列，可回档到某次整理之前</p>
+        </div>
+        <button class="icon-btn" id="closeHistoryButton" type="button" aria-label="关闭历史记录">×</button>
+      </header>
+      <div class="history-result" id="historyResult" hidden></div>
+      <div class="history-body" id="historyList"></div>
+    </section>
+  </div>
+
+  <div class="name-dialog" id="renameDialog" hidden>
+    <section class="name-dialog-card" role="dialog" aria-modal="true" aria-labelledby="renameTitle">
+      <h3 id="renameTitle">编辑名称</h3>
+      <p id="renameSubtitle">留空可恢复默认名称。</p>
+      <input
+        class="name-dialog-input"
+        id="renameInput"
+        type="text"
+        maxlength="40"
+        autocomplete="off"
+        aria-label="小组件名称"
+      >
+      <div class="name-dialog-actions">
+        <button class="btn btn-ghost" id="renameCancelButton" type="button">取消</button>
+        <button class="btn btn-primary" id="renameConfirmButton" type="button">保存</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="modal-backdrop" id="neteaseAdapterModal" hidden>
+    <section
+      class="modal-panel netease-adapter-panel"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="neteaseAdapterTitle"
+      aria-describedby="neteaseAdapterIntro"
+    >
+      <header class="modal-head">
+        <div class="netease-adapter-head">
+          <span class="settings-icon tone-teal" aria-hidden="true"><svg class="icon"><use href="#i-music"></use></svg></span>
+          <div>
+            <h2 id="neteaseAdapterTitle">网易云音乐适配</h2>
+            <p>让网易云接入 Windows 系统媒体会话。</p>
+          </div>
+        </div>
+        <button class="icon-btn" id="neteaseAdapterCloseButton" type="button" aria-label="关闭网易云音乐适配说明">×</button>
+      </header>
+
+      <div class="netease-adapter-body">
+        <p class="netease-adapter-intro" id="neteaseAdapterIntro">
+          Windows 的音乐卡片、音量面板和键盘媒体键都依赖系统媒体会话（SMTC）。网易云音乐桌面版默认不向系统上报播放状态，所以本应用读不到它的歌名与进度，也无法通过系统媒体键控制它。
+        </p>
+
+        <div class="netease-adapter-steps" aria-label="适配步骤">
+          <div class="netease-adapter-step">
+            <span class="netease-adapter-step-index" aria-hidden="true">1</span>
+            <div>
+              <strong>安装 BetterNCM</strong>
+              <p>网易云的本地插件加载器，从官方开源发布页安装。</p>
+            </div>
+          </div>
+          <div class="netease-adapter-step">
+            <span class="netease-adapter-step-index" aria-hidden="true">2</span>
+            <div>
+              <strong>安装 InfLink-rs</strong>
+              <p>把网易云的歌曲、歌手、封面与播放进度桥接到 Windows SMTC。</p>
+            </div>
+          </div>
+          <div class="netease-adapter-step">
+            <span class="netease-adapter-step-index" aria-hidden="true">3</span>
+            <div>
+              <strong>重启网易云</strong>
+              <p>播放任意歌曲，音乐组件会自动读取系统会话并刷新。</p>
+            </div>
+          </div>
+        </div>
+
+        <section class="netease-adapter-safety" aria-label="安全声明">
+          <span class="netease-adapter-safety-icon" aria-hidden="true"><svg class="icon"><use href="#i-shield"></use></svg></span>
+          <div>
+            <strong>纯本地开源桥接，不涉及账号数据，无封号风险</strong>
+            <p>
+              BetterNCM 与 InfLink-rs 都在本机运行，只把播放信息交给 Windows 系统媒体会话，不会读取账号密码、不调用网易云私有接口、不上传听歌数据。两个插件均为独立第三方开源项目，请只从下方官方仓库下载。
+            </p>
+          </div>
+        </section>
+
+        <div class="netease-adapter-install">
+          <span>检测到的网易云安装目录</span>
+          <code id="neteaseInstallPath">正在检测…</code>
+        </div>
+
+        <div class="netease-adapter-actions">
+          <button class="btn btn-primary" type="button" data-netease-link="betterncm">
+            <svg class="icon btn-icon" aria-hidden="true"><use href="#i-arrow-up-right"></use></svg>
+            下载 BetterNCM
+          </button>
+          <button class="btn btn-ghost" type="button" data-netease-link="infllink">
+            <svg class="icon btn-icon" aria-hidden="true"><use href="#i-arrow-up-right"></use></svg>
+            下载 InfLink-rs
+          </button>
+          <button class="btn btn-ghost" id="openNeteaseDirButton" type="button">
+            <svg class="icon btn-icon" aria-hidden="true"><use href="#i-folder"></use></svg>
+            一键打开网易云安装目录
+          </button>
+        </div>
+
+        <p class="netease-adapter-status" id="neteaseAdapterStatus" role="status" hidden></p>
+      </div>
+
+      <footer class="modal-actions">
+        <button class="btn btn-ghost" id="neteaseAdapterDoneButton" type="button">知道了</button>
+      </footer>
+    </section>
+  </div>
+
+  <div class="global-toast" id="globalToast" role="status" aria-live="polite" hidden></div>
+
+  <script src="i18n-data.js"></script>
+  <script src="i18n.js"></script>
+  <script src="renderer.js"></script>
+</body>
+</html>

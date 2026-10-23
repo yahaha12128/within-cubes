@@ -1,0 +1,156 @@
+/* Settings page and note-history additions. */
+
+.path-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.path-row {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 11px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface-soft);
+}
+
+.path-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.path-title {
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.path-value {
+  overflow: hidden;
+  color: var(--muted);
+  font-family: "Cascadia Mono", "Consolas", monospace;
+  font-size: 10.5px;
+  line-height: 1.5;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.path-open-btn {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.notes-history-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.notes-history-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.notes-history-toolbar h4 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.notes-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.notes-history-row {
+  display: flex;
+  min-width: 0;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 11px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--surface-soft);
+}
+
+.notes-history-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.notes-history-title {
+  overflow: hidden;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.notes-history-preview {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.45;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.notes-history-meta {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.notes-history-actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 5px;
+}
+
+.notes-history-empty {
+  margin: 0;
+  padding: 16px;
+  border: 1px dashed var(--line);
+  border-radius: 9px;
+  color: var(--muted);
+  font-size: 11.5px;
+  text-align: center;
+}
+
+@media (max-width: 720px) {
+  .path-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .notes-history-row {
+    flex-direction: column;
+  }
+}
+
+.settings-action.is-armed {
+  border-color: var(--danger-border);
+  color: var(--danger);
+  background: var(--danger-soft);
+}
+
+.manage-cat-row.is-context-highlight {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}

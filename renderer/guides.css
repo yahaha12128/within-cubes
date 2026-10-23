@@ -1,0 +1,37 @@
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: transparent;
+  pointer-events: none;
+  user-select: none;
+}
+
+.guide-layer {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.guide-line {
+  position: absolute;
+  border-radius: 999px;
+  background: #f5488f;
+  box-shadow:
+    0 0 0 1px rgba(82, 17, 44, 0.24),
+    0 0 9px rgba(245, 72, 143, 0.62);
+  pointer-events: none;
+}
+
+.guide-line--vertical {
+  width: 2px;
+  transform: translateX(-1px);
+}
+
+.guide-line--horizontal {
+  height: 2px;
+  transform: translateY(-1px);
+}

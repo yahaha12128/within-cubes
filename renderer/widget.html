@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: file:; media-src 'none';"
+  >
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>小组件</title>
+  <link rel="stylesheet" href="floating.css">
+  <link rel="stylesheet" href="widget.css">
+</head>
+<body>
+  <div class="floating-app widget-app" id="floatingApp">
+    <div class="widget-bg" id="widgetBg" aria-hidden="true" hidden>
+      <img id="widgetBgImage" alt="">
+    </div>
+    <div class="glass-layer" aria-hidden="true"></div>
+
+    <main class="widget-body">
+      <section class="clock-panel" id="clockPanel" aria-label="时钟" hidden>
+        <div class="clock-content" id="clockContent">
+          <p class="clock-time" id="clockTime">--:--:--</p>
+          <p class="clock-date" id="clockDate">----/--/--</p>
+          <p class="clock-weekday" id="clockWeekday">星期—</p>
+          <p class="clock-text" id="clockText">祝你开心！</p>
+        </div>
+      </section>
+
+      <section class="music-panel" id="musicPanel" aria-label="音乐播放器" hidden>
+        <div class="music-head">
+          <div class="music-disc" id="musicDisc" aria-hidden="true">♪</div>
+          <div class="music-copy">
+            <h2 id="musicTitle">—</h2>
+            <p id="musicArtist" aria-live="polite">—</p>
+          </div>
+        </div>
+
+        <div class="music-seek" id="musicSeek" role="progressbar" aria-label="播放进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div class="music-seek-fill" id="musicSeekFill"></div>
+        </div>
+
+        <div class="music-times">
+          <span id="musicCurrent">0:00</span>
+          <span id="musicDuration">0:00</span>
+        </div>
+
+        <div class="music-controls">
+          <button class="music-control" id="musicPrev" type="button" aria-label="上一首" title="上一首">⏮</button>
+          <button class="music-control music-control--play" id="musicPlay" type="button" aria-label="播放" title="播放">▶</button>
+          <button class="music-control" id="musicNext" type="button" aria-label="下一首" title="下一首">⏭</button>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="widget.js"></script>
+</body>
+</html>

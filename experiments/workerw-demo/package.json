@@ -1,0 +1,10 @@
+{
+  "name": "within-cubes-workerw-demo",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Windows WorkerW desktop-layer feasibility demo",
+  "main": "main.js",
+  "scripts": {
+    "test": "node --test win32.test.js"
+  }
+}

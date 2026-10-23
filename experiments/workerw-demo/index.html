@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'none'; style-src 'self'; script-src 'self';">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WorkerW 嵌入测试</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="panel" id="panel">
+    <header class="header">
+      <div>
+        <p class="eyebrow">DESKTOP LAYER · PHASE 1</p>
+        <h1>WorkerW 嵌入测试</h1>
+      </div>
+      <div class="status-pill is-pending" id="statusPill">
+        <span class="status-dot"></span>
+        <span id="statusText">正在发现桌面宿主</span>
+      </div>
+    </header>
+
+    <section class="host-line" aria-label="桌面宿主">
+      <span class="host-label">桌面宿主</span>
+      <code id="hostValue">扫描中…</code>
+      <span class="style-badge is-pending" id="childBadge">WS_CHILD ?</span>
+    </section>
+
+    <section class="diag-grid" aria-label="原生窗口诊断">
+      <div class="diag-cell">
+        <span class="diag-label">Win32 父窗口</span>
+        <strong id="parentValue">—</strong>
+      </div>
+      <div class="diag-cell">
+        <span class="diag-label">鼠标穿透</span>
+        <strong class="is-good" id="clickThroughValue">未启用</strong>
+      </div>
+      <div class="diag-cell">
+        <span class="diag-label">SHELLDLL_DefView</span>
+        <strong id="defViewValue">—</strong>
+      </div>
+      <div class="diag-cell">
+        <span class="diag-label">窗口矩形</span>
+        <strong id="rectValue">—</strong>
+      </div>
+    </section>
+
+    <section class="click-test" aria-label="鼠标点击测试">
+      <button class="click-button" id="clickButton" type="button">
+        <span class="click-button-icon" aria-hidden="true">↖</span>
+        点击测试
+      </button>
+      <div class="click-result" aria-live="polite">
+        <div class="count-line">
+          <strong id="clickCount">0</strong>
+          <span>次按钮点击</span>
+        </div>
+        <span class="mouse-state" id="mouseState">尚未收到鼠标事件</span>
+      </div>
+    </section>
+
+    <ol class="steps" aria-label="验证步骤">
+      <li><span class="step-index">1</span>点击按钮，右侧计数应该增加。</li>
+      <li><span class="step-index">2</span>打开其他应用，它应该覆盖在本面板上方。</li>
+      <li><span class="step-index">3</span>按 Win + D，本面板不应被隐藏。</li>
+    </ol>
+
+    <div class="error-box" id="errorBox" role="alert" hidden></div>
+
+    <footer class="footer">
+      <div class="footer-actions">
+        <button class="ghost-button" id="reapplyButton" type="button">重新置顶</button>
+        <button class="ghost-button danger" id="closeButton" type="button">关闭 Demo</button>
+      </div>
+      <span class="footer-note">DWM 子窗口 · 不修改业务数据</span>
+    </footer>
+  </main>
+
+  <script src="renderer.js"></script>
+</body>
+</html>

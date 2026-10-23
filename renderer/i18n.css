@@ -1,0 +1,55 @@
+/* ---------- 多语言：语言选择器与文字溢出保护 ---------- */
+
+.settings-select {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.settings-select select {
+  min-width: 150px;
+  max-width: 220px;
+  height: 34px;
+  padding: 0 10px;
+  border: 1px solid var(--ui-line);
+  border-radius: 9px;
+  color: var(--ui-ink);
+  background: var(--ui-surface);
+  font-family: var(--ui-font);
+  font-size: var(--ui-body);
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.settings-select select:hover {
+  background: var(--ui-surface-hover);
+}
+
+.settings-select select:focus-visible {
+  outline: 2px solid var(--ui-accent);
+  outline-offset: 2px;
+}
+
+/* Every text-bearing UI element opts into ellipsis clipping. */
+:where(button, a, label, p, span, li, h1, h2, h3, h4, h5, h6, td, th, select) {
+  text-overflow: ellipsis;
+}
+
+.btn,
+.filter-chip,
+.settings-action,
+.nav-label,
+.breadcrumb-link,
+.breadcrumb-current,
+.grid-card-title,
+.settings-copy h4,
+.settings-accordion-title,
+.path-title,
+.about-entry-title,
+.about-feature-card h3,
+.settings-select select {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
