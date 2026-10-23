@@ -49,10 +49,36 @@
 
 ## 📸 界面预览
 
-*(开发者提示：如果你有好看的桌面截图，可以上传到 GitHub 的 Issue 里拿到图片链接，替换掉下面的占位图)*
+### 🧩 桌面组件
 
 <div align="center">
-  <img src="https://via.placeholder.com/800x450/F8FAFC/0F172A?text=Within+Cubes+Preview" alt="方寸格主界面预览" width="800" style="border-radius: 12px;"/>
+  <img src="https://github.com/user-attachments/assets/22e8ba93-1bdc-4b4d-b86a-94ad29f5875e" width="45%" />
+  &nbsp;&nbsp;
+  <img src="https://github.com/user-attachments/assets/4d1788ca-ed8b-443a-9314-c226119824d7" width="45%" />
+</div>
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/b3b631e6-5d97-4062-8201-c5ee14db3cfe" width="45%" />
+  &nbsp;&nbsp;
+  <img src="https://github.com/user-attachments/assets/a925d95f-327e-43f1-ac92-169bbf352854" width="45%" />
+</div>
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/4dfccf33-5a20-4986-8dda-17bd0b986ce7" width="45%" />
+  &nbsp;&nbsp;
+  <img src="https://github.com/user-attachments/assets/4b1d6536-3f36-4ca9-818c-6af595a6a2ce" width="45%" />
+</div>
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/2c1c5244-c2f6-4be8-ade7-c49effbc902b" width="45%" />
+  &nbsp;&nbsp;
+  <img src="https://github.com/user-attachments/assets/f05fa47b-4552-4760-8d6e-137ab0b7d08b" width="45%" />
+</div>
+
+<br/>
+
+### 🖥️ 主界面与控制台
+
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/760c70f2-ad98-421d-ba03-89faa44aba64" width="60%" />
+  <img src="https://github.com/user-attachments/assets/6357f9c7-9e8f-44f3-9dbc-89556f3d98f6" width="30%" />
 </div>
 
 ---
