@@ -3,6 +3,7 @@
 # 📦 方寸格 (Within Cubes)
 
 > **“方寸之间，自有天地。”**
+> 
 > 这是一款电脑桌面整理的软件，集合了各类文件分类整理组件及多项功能组件，为你打造了一方宁静的桌面自留地。
 
 [![Windows](https://img.shields.io/badge/Platform-Windows_10%20%7C%2011-0078D4?style=for-the-badge&logo=windows)](https://github.com/yahaha12128/within-cubes)
@@ -52,13 +53,13 @@
 ### 🧩 软件主界面
 
 
-| <img width="1068" height="667" alt="Image" src="https://github.com/user-attachments/assets/a726f342-aef1-41c4-90d9-3ad4ce1db269" />|
+<img width="1068" height="667" alt="Image" src="https://github.com/user-attachments/assets/a726f342-aef1-41c4-90d9-3ad4ce1db269" />
 
 
 ### 🖥️ 桌面组件预览
 
 
-| <img width="1261" height="667" alt="Image" src="https://github.com/user-attachments/assets/31266336-369d-411d-900c-b920e8574a06" />|
+<img width="1261" height="667" alt="Image" src="https://github.com/user-attachments/assets/31266336-369d-411d-900c-b920e8574a06" />
 ---
 
 ## 📥 下载与安装
