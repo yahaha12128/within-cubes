@@ -1,0 +1,2 @@
+# 安装包超过 GitHub 100MB 单文件限制，只作为 Release 资产上传，不进仓库
+releases/
